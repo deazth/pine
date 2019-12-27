@@ -1,2 +1,11 @@
 <!-- This file is used to store sidebar items, starting with Backpack\Base 0.9.0 -->
 <li class="nav-item"><a class="nav-link" href="{{ backpack_url('dashboard') }}"><i class="fa fa-dashboard nav-icon"></i> {{ trans('backpack::base.dashboard') }}</a></li>
+<li class="nav-title">Tajuk lagi</li>
+<li class="nav-item nav-dropdown"><a class="nav-link nav-dropdown-toggle" href="#"><i class="la la-lg la-bank"></i> Samples</a>
+  <ul class="nav-dropdown-items">
+    <li class="nav-item"><a class="nav-link" href="{{ route('index')}}"><i class="la la-lg la-puzzle"></i> kosong</a></li>
+    <li class="nav-item"><a class="nav-link" href="{{ route('wijjet')}}"><i class="la la-lg la-puzzle"></i> widget</a></li>
+    <li class="nav-item"><a class="nav-link" href="{{ route('home')}}"><i class="la la-lg la-puzzle"></i> kelendar</a></li>
+    <li class="nav-item"><a class="nav-link" href="{{ route('geraf')}}"><i class="la la-lg la-puzzle"></i> graf</a></li>
+  </ul>
+</li>
