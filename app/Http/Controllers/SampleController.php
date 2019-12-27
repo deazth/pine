@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
+use App\Charts\CartaGeraf;
 
 class SampleController extends Controller
 {
@@ -36,6 +37,12 @@ class SampleController extends Controller
   }
 
   public function geraf(Request $req){
+
+    $usersChart = new CartaGeraf;
+    $usersChart->labels(['Jan', 'Feb', 'Mar']);
+    $usersChart->dataset('Users by trimester', 'line', [10, 25, 13]);
+    $this->addVar('chart1', $usersChart);
+
     return view('sample.graf', $this->data);
   }
 }

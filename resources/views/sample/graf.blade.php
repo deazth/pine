@@ -5,7 +5,7 @@
   <div class="card">
     <div class="card-header">Graf 1</div>
     <div class="card-body">
-      nom
+      {!! $chart1->container() !!}
     </div>
   </div>
 </div>
