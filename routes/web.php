@@ -11,6 +11,12 @@
 |
 */
 
-Route::get('/', function () {
-    return view('welcome');
+Route::get('/', 'SampleController@index')->name('index');
+
+
+
+Route::group(['middleware' => ['admin']], function () {
+  Route::get('/home', 'SampleController@home')->name('home');
+  Route::get('/wijet', 'SampleController@wijjet')->name('wijjet');
+  Route::get('/graf', 'SampleController@geraf')->name('geraf');
 });
