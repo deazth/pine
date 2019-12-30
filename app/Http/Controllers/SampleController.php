@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
 use App\Charts\CartaGeraf;
+use App\User;
 use \Calendar;
 
 class SampleController extends Controller
@@ -85,5 +86,11 @@ class SampleController extends Controller
     $this->addVar('chart2', $cc2);
 
     return view('sample.graf', $this->data);
+  }
+
+  public function datable(){
+    $u = User::all();
+
+    return view('sample.datatable', ['users' => $u]);
   }
 }
