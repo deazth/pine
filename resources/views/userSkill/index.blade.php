@@ -10,7 +10,7 @@
                 <div class="col-6">
                               <div class="hidden-print with-border">
 
-                    <a href="http://localhost:8000/admin/skillcat/create" class="btn btn-success" >
+                    <a href="{{}}" class="btn btn-success" >
 
                       <i class="fa fa-plus"></i> Add Skills</a>
 
