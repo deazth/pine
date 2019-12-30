@@ -25,4 +25,5 @@ Route::get( '/task','TaskController@showTask')->name('task.show');
 Route::get( '/task/request','TaskController@showTaskRequest')->name('task.showrequest');
 Route::get( '/task/list','TaskController@showTaskList')->name('task.showlist');
 Route::get( '/task/open','TaskController@showTaskOpen')->name('task.showopen');
-  
+
+Route::get( '/user/skill/','UserSkillController@index')->name('userskill.index');
