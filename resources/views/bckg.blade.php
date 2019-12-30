@@ -1,11 +1,15 @@
-@section('bckg')
 <style>
   .videos{
     position: absolute;
+    top: 0;
     z-index: -1;
     overflow: hidden;
     width: 100vw; 
     height: 100vh
+  }
+
+  .videos-v{
+    position: fixed;
   }
 
   @media(max-width: 768px){
@@ -23,10 +27,8 @@
     }
   }
 </style>
-  <div class="videos">
-    <video class="videos-v" autoplay loop>
-      <source src="{{asset('assets/videos.mp4')}}" type="video/mp4">
-    </video>
-  </div>
-
-  @endsection
+<div class="videos">
+  <video class="videos-v" autoplay loop>
+    <source src="{{asset('assets/videos.mp4')}}" type="video/mp4">
+  </video>
+</div>
