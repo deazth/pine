@@ -28,3 +28,4 @@ Route::get( '/task/request/new','TaskController@showTaskRequestNew')->name('task
 Route::get( '/task/list','TaskController@showTaskList')->name('task.showlist');
 Route::get( '/task/open','TaskController@showTaskOpen')->name('task.showopen'); //Advertisement
 Route::get( '/user/skill/','UserSkillController@index')->name('userskill.index');
+Route::get( '/user/skill/','UserSkillController@create')->name('userskill.create');

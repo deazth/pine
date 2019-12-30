@@ -14,7 +14,8 @@ class UserSkillController extends Controller
      */
     public function index()
     {
-          return view('userskill.index', []);
+      $us = UserSkill::all();
+          return view('userskill.index', ['userSkills' => $us]);
     }
 
     /**
