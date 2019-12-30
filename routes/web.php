@@ -24,11 +24,5 @@ Route::group(['middleware' => ['admin']], function () {
 Route::get( '/task/request','TaskController@showTaskRequest')->name('task.showrequest');
 Route::get( '/task/request/new','TaskController@showTaskRequestNew')->name('task.newrequest');
 Route::get( '/task/list','TaskController@showTaskList')->name('task.showlist');
-<<<<<<< HEAD
-Route::get( '/task/open','TaskController@showTaskOpen')->name('task.showopen');
-
-Route::get( '/user/skill/','UserSkillController@index')->name('userskill.index');
-=======
 Route::get( '/task/open','TaskController@showTaskOpen')->name('task.showopen'); //Advertisement
-  
->>>>>>> a9a5223b8588bda7e3c70dd5beac9753cbbdb930
+Route::get( '/user/skill/','UserSkillController@index')->name('userskill.index');
