@@ -16,7 +16,10 @@ class CreateTaskAcceptancesTable extends Migration
         Schema::create('task_acceptances', function (Blueprint $table) {
             $table->bigIncrements('id');
             $table->integer('user_id');
-            $table->string('task_status'); //accept/complete/cancel/reject
+            $table->integer('task_accept')->nullable();
+            $table->integer('task_complete')->nullable();
+            $table->integer('task_cancel')->nullable();
+            $table->integer('task_reject')->nullable();
             $table->year('year');
             $table->integer('month');
             $table->timestamps();

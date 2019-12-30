@@ -17,3 +17,8 @@
     <li class="nav-item"><a class="nav-link" href="{{ route('geraf')}}"><i class="nav-icon fa fa-briefcase"></i> graf</a></li>
   </ul>
 </li>
+<li class="nav-title">Task</li>
+<li class="nav-item"><a class="nav-link" href="{{ route('task.showrequest') }}"><i class="fa fa-dashboard nav-icon"></i>Request Task</a></li>
+<li class="nav-item"><a class="nav-link" href="{{ route('task.showlist') }}"><i class="fa fa-dashboard nav-icon"></i>Task List</a></li>
+<li class="nav-item"><a class="nav-link" href="{{ route('task.showopen') }}"><i class="fa fa-dashboard nav-icon"></i>Open Task</a></li>
+
