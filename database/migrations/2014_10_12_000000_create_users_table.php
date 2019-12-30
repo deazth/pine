@@ -20,11 +20,12 @@ class CreateUsersTable extends Migration
             $table->timestamp('email_verified_at')->nullable();
             $table->string('password');
             $table->string('staff_no')->nullable();
-            $table->integer('task_accept')->nullable();
-            $table->integer('task_complete')->nullable();
-            $table->integer('task_cancel')->nullable();
-            $table->integer('task_reject')->nullable();
-            $table->integer('total_rating')->nullable();
+            $table->integer('task_accept')->default(0);
+            $table->integer('task_complete')->default(0);
+            $table->integer('task_cancel')->default(0);
+            $table->integer('task_reject')->default(0);
+            $table->integer('total_req_rating')->default(0);
+            $table->integer('total_do_rating')->default(0);
             $table->rememberToken();
             $table->timestamps();
         });

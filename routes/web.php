@@ -29,3 +29,6 @@ Route::group(['middleware' => ['admin']], function () {
   Route::get( '/task/open','TaskController@showTaskOpen')->name('task.showopen'); //Advertisement
   Route::get( '/user/skill/','UserSkillController@index')->name('userskill.index');
 });
+
+// so-called API
+Route::get( '/user/image','UserController@getStaffImage')->name('user.image');
