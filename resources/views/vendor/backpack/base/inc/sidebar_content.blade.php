@@ -16,6 +16,7 @@
     <li class="nav-item"><a class="nav-link" href="{{ route('wijjet')}}"><i class="nav-icon fa fa-briefcase"></i> widget</a></li>
     <li class="nav-item"><a class="nav-link" href="{{ route('home')}}"><i class="nav-icon fa fa-briefcase"></i> kelendar</a></li>
     <li class="nav-item"><a class="nav-link" href="{{ route('geraf')}}"><i class="nav-icon fa fa-briefcase"></i> graf</a></li>
+    <li class="nav-item"><a class="nav-link" href="{{ route('datable')}}"><i class="nav-icon fa fa-briefcase"></i> Data Table</a></li>
   </ul>
 </li>
 <li class="nav-title">Task</li>

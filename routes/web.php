@@ -19,6 +19,7 @@ Route::group(['middleware' => ['admin']], function () {
   Route::get('/home', 'SampleController@home')->name('home');
   Route::get('/wijet', 'SampleController@wijjet')->name('wijjet');
   Route::get('/graf', 'SampleController@geraf')->name('geraf');
+  Route::get('/datable', 'SampleController@datable')->name('datable');
   Route::get('/profile', 'UserController@showProfile')->name('user.profile');
 });
 
