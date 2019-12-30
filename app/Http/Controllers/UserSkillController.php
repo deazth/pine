@@ -3,6 +3,8 @@
 namespace App\Http\Controllers;
 
 use App\UserSkill;
+use App\Models\SkillCat;
+
 use Illuminate\Http\Request;
 
 class UserSkillController extends Controller
@@ -25,7 +27,9 @@ class UserSkillController extends Controller
      */
     public function create()
     {
-        //
+        $skillcat = SkillCat::all();
+
+        return view('userskill.create', ['skillcat' => $skillcat]);
     }
 
     /**
@@ -36,7 +40,8 @@ class UserSkillController extends Controller
      */
     public function store(Request $request)
     {
-        //
+
+        return "hello";
     }
 
     /**
