@@ -30,5 +30,11 @@ Route::group(['middleware' => ['admin']], function () {
   Route::get('/task/request/getskill', 'TaskController@taskRequestGetSkill')->name('task.getskill');
   Route::get( '/task/list','TaskController@showTaskList')->name('task.showlist');
   Route::get( '/task/open','TaskController@showTaskOpen')->name('task.showopen'); //Advertisement
+
   Route::get( '/user/skill/','UserSkillController@index')->name('userskill.index');
+  Route::get( '/user/skill/create','UserSkillController@create')->name('userskill.create');
+  Route::post( '/user/skill/create','UserSkillController@store')->name('userskill.store');
 });
+
+// so-called API
+Route::get( '/user/image','UserController@getStaffImage')->name('user.image');
