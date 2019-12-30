@@ -2,7 +2,7 @@
 
 @section('content')
 <div class="card">
-    <div class="card-header">Meja Maklumat</div>
+    <div class="card-header">My Skills</div>
     <div class="card-body">
 
 
@@ -15,11 +15,9 @@
                       <i class="fa fa-plus"></i> Add Skills</a>
 
                   </div>
-                            </div>
-                <div class="col-6">
-                    <div id="datatable_search_stack" class="float-right"><div id="crudTable_filter" class="dataTables_filter"><label><span class="d-none d-sm-inline">Search: </span><input type="search" class="form-control" placeholder="" aria-controls="crudTable"></label></div></div>
-                </div>
-              </div>
+            </div>
+
+            </div>
 
 
 
@@ -29,18 +27,38 @@
         <thead>
           <tr>
             <th scope="col">Name</th>
-            <th scope="col">Staff No</th>
+            <th scope="col">SKill</th>
+            <th scope="col">Category</th>
+            <th class="sorting_disabled" data-orderable="false">Actions</th>
           </tr>
         </thead>
         <tbody>
           @foreach($userSkills as $us)
           <tr>
-            <td>{{ $us->user_id }}</td>
-            <td>{{ $us->skill_id }}</td>
+            <td>{{ $us->user->name }}</td>
+            <td>{{ $us->skill->name }}</td>
+            <td>{{ $us->skill->SkillCat->name }}</td>
+            <td>	<a href="#" class="btn btn-danger btn-sm"
+						onClick="submitDeleteForm('{{$us->id}}','{{$us->skill->name }}')"
+						>Delete </a> </td>
+
+
+
           </tr>
           @endforeach
         </tbody>
       </table>
+
+      <form method="POST" action="{{route('userskill.destroy',[],false) }}"
+      	id="formDeleteID">
+      	@csrf <input name="usid" id="delete_usid" type="hidden" />
+
+
+
+
+      </form>
+
+
     </div>
 </div>
 @endsection
@@ -64,5 +82,18 @@
 $(document).ready(function() {
     $('#taskdetailtable').DataTable();
 } );
+
+function submitDeleteForm(usid, skill_name){
+	var txt;
+	var r = confirm("Are you sure ? "+skill_name+" would be deleted");
+	if (r == true) {
+		$('#delete_usid').val(usid);
+		$('#formDeleteID').submit();
+	} else {
+	  txt = skill_name+ " Not deleted!";
+	}
+  };
+
+
 </script>
 @endsection

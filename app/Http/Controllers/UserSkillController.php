@@ -38,11 +38,34 @@ class UserSkillController extends Controller
      * @param  \Illuminate\Http\Request  $request
      * @return \Illuminate\Http\Response
      */
-    public function store(Request $request)
+    public function store(Request $req)
     {
+        $inputskill = $req->inputskill;
+        $user_id = backpack_user()->id;
+        $check = UserSkill::where('user_id', $user_id)->where('skill_id',$inputskill)->count();
 
-        return "hello";
+
+
+    if($check == 0){
+    $userSkill = new UserSkill;
+    $userSkill->user_id = $user_id;
+    $userSkill->skill_id = $inputskill;
+    $userSkill->updated_by = $user_id;
+    $userSkill->save();
+
+    $a_text = 'Successfully add skill';
+    $a_type = "success";
+}
+else{
+    $a_text = 'The skill already existed';
+    $a_type = "warning";
+
     }
+    return redirect(route('userskill.index', [], false))
+    ->with(['a_text' => $a_text,'a_type' => $a_type]);
+  }
+
+
 
     /**
      * Display the specified resource.
@@ -84,8 +107,16 @@ class UserSkillController extends Controller
      * @param  \App\UserSkill  $userSkill
      * @return \Illuminate\Http\Response
      */
-    public function destroy(UserSkill $userSkill)
+    public function destroy(Request $req)
     {
-        //
+
+
+      $us = UserSkill::find($req->usid);
+      if($us){        $us->delete();
+
+        return redirect(route('userskill.index', [], false))->with([]);
+      } else {
+        return redirect(route('userskill.index', [], false))->with([]);
+      }
     }
 }
