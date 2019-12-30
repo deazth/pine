@@ -3,6 +3,8 @@
 namespace App\Http\Controllers;
 
 use App\Task;
+use App\User;
+use Session;
 use Illuminate\Http\Request;
 
 class TaskController extends Controller
@@ -81,5 +83,32 @@ class TaskController extends Controller
     public function destroy(Task $task)
     {
         //
+    }
+    
+    public function showTaskList(Request $req)
+    {
+        $task = Task::where('user_id', backpack_user()->id)->orderBy('created_at')->get();
+        return view('task_list', ['task' => $task]);
+
+    }
+
+    public function showTask(Request $req)
+    {
+        $task = Task::where('user_id', backpack_user()->id)->orderBy('created_at')->get();
+        return view('task_list', ['task' => $task]);
+    }
+
+    public function showTaskRequest(Request $req){
+        if($req->session()->get('task')!=null){
+            $task = $req->session()->get('task');
+            return view('task_request', ['task' => $task]);
+        }else{
+            return view('task_request', []);
+        }
+    }
+
+    public function showTaskRequestNew(Request $req){
+        Session::put(['task' => []]);
+        return redirect(route('task.showrequest',[],false));
     }
 }
