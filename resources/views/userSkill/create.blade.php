@@ -25,21 +25,9 @@
                                 <div class="mt-2 col-lg-12"></div>
                                 <div class="col-lg-2">Skill Category:</div>
                                 <div class="col-lg-6">
-                                    <select class="form-control" id="inputskillcat" name="inputskillcat"
-                                    @if($task ?? '')
-                                        @if($task->status!="Open")
-                                            disabled
-                                        @endif
-                                    @endif
-                                    >
-                                        <option hidden disabled value=""
-                                            @if($task ?? '')
-                                                @if($task->skill_cat_id=="")
-                                                    selected
-                                                @endif
-                                            @else
-                                                selected
-                                            @endif>Select Skill Category
+                                    <select class="form-control" id="inputskillcat" name="inputskillcat">
+                                        <option hidden disabled value="" >
+                                          Select Skill Category
                                         </option>
                                         @foreach($skillcat as $single)
                                         <option value="{{$single->id}}">{{$single->name}}</option>
@@ -50,11 +38,7 @@
                                 <div class="mt-2 col-lg-12"></div>
                                 <div class="col-lg-2">Skill:</div>
                                 <div class="col-lg-6">
-                                    <select class="form-control" id="inputskill" name="inputskill" required    >
-
-
-
-                                    </select>
+                                    <select class="form-control" id="inputskill" name="inputskill" required    >                                    </select>
                                 </div>
                                 <div class="col-lg-4"></div>
                             </div>
