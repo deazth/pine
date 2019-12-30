@@ -1,6 +1,7 @@
 <!-- This file is used to store sidebar items, starting with Backpack\Base 0.9.0 -->
 
 <li class="nav-item"><a class="nav-link" href="{{ backpack_url('dashboard') }}"><i class="fa fa-dashboard nav-icon"></i> {{ trans('backpack::base.dashboard') }}</a></li>
+<li class="nav-item"><a class="nav-link" href="{{ route('userskill.index') }}"><i class="fa fa-book nav-icon"></i> My Skills</a></li>
 <li class="nav-item nav-dropdown"><a class="nav-link nav-dropdown-toggle" href="#"><i class="nav-icon fa fa-briefcase"></i> admin thingy</a>
   <ul class="nav-dropdown-items">
     <li class='nav-item'><a class='nav-link' href='{{ backpack_url('skillcat') }}'><i class='nav-icon fa fa-briefcase  '></i> Skill Category</a></li>
@@ -18,7 +19,6 @@
   </ul>
 </li>
 <li class="nav-title">Task</li>
-<li class="nav-item"><a class="nav-link" href="{{ route('task.showrequest') }}"><i class="fa fa-dashboard nav-icon"></i>Request Task</a></li>
+<li class="nav-item"><a class="nav-link" href="{{ route('task.newrequest') }}"><i class="fa fa-dashboard nav-icon"></i>Request Task</a></li>
 <li class="nav-item"><a class="nav-link" href="{{ route('task.showlist') }}"><i class="fa fa-dashboard nav-icon"></i>Task List</a></li>
 <li class="nav-item"><a class="nav-link" href="{{ route('task.showopen') }}"><i class="fa fa-dashboard nav-icon"></i>Open Task</a></li>
-
