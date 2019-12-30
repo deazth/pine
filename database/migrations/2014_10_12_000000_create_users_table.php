@@ -24,8 +24,11 @@ class CreateUsersTable extends Migration
             $table->integer('task_complete')->default(0);
             $table->integer('task_cancel')->default(0);
             $table->integer('task_reject')->default(0);
+            $table->integer('task_create')->default(0);
             $table->integer('total_req_rating')->default(0);
+            $table->integer('total_req_count')->default(0);
             $table->integer('total_do_rating')->default(0);
+            $table->integer('total_do_count')->default(0);
             $table->rememberToken();
             $table->timestamps();
         });
