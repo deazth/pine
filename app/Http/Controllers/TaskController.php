@@ -102,13 +102,14 @@ class TaskController extends Controller
 
     public function showTaskRequest(Request $req){
         $skillcat = SkillCat::all();
+        $assignee = User::all();
         if($req->session()->get('task')!=null){
             $task = $req->session()->get('task');
             $skill = Skill::where('skill_cat_id', $req->session()->get('task')->skill_cat_id)->get();
-            return view('task_request', ['task' => $task, 'skillcat' => $skillcat, 'skill' => $skill]);
+            return view('task_request', ['assignee' => $assignee, 'task' => $task, 'skillcat' => $skillcat, 'skill' => $skill]);
         }else if($req->session()->get('draft')!=null){
             $draft = $req->session()->get('draft');
-            return view('task_request', ['draft' => $draft, 'skillcat' => $skillcat]);
+            return view('task_request', ['assignee' => $assignee, 'draft' => $draft, 'skillcat' => $skillcat]);
         }else{
             return view('task_request', []);
         }
@@ -127,15 +128,41 @@ class TaskController extends Controller
             array_push($arr, ['id'=>$s->id, 'name'=>$s->name]);
         }
         return $arr;
-        // return $skill;
     }
 
-    // public function getCompany(Request $req){   
-    //     $comp = CompRegionConfig::where('region', $req->region)->get();  
-    //     $arr = [];
-    //     foreach($comp as $c){
-    //         array_push($arr, ['id'=>$c->company_id, 'name'=>$c->companyid->company_descr]);
-    //     }
-    //     return $arr;
-    // }
+    public function submitTaskRequest(Request $req){
+        // if($req->inputtype=="advert"){
+        if($req->inputid==null){
+            $new = new Task;
+        }else{
+            $new = Task::find($req->inputid);
+        }
+        // dd($req->session()->get('draft'));
+        $new->reference_no = $req->session()->get('draft')[0];
+        $new->name = $req->inputname;
+        $new->descr = $req->inputdescription;
+        $new->user_id = backpack_user()->id;
+        $new->skill_id = $req->inputskill;
+        $new->skill_cat_id = $req->inputskillcat;
+        if($req->inputassignid!=null){
+            $new->assign_id = $req->inputassignid;
+            $new->status = "Proposed";
+            $new->save();
+            return redirect(route('task.showlist',[],false))->with([
+                'feedback' => true,
+                'feedback_text' => "Successfully assigned new task request!",
+                'feedback_type' => "success"
+            ]);
+        }else{
+            $new->status = "Advertised";
+            $new->save();
+            return redirect(route('task.showlist',[],false))->with([
+                'feedback' => true,
+                'feedback_text' => "Successfully advertised new task request!",
+                'feedback_type' => "success"
+            ]);
+        }
+    }
+
+    
 }
