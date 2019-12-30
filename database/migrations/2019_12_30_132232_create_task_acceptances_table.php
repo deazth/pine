@@ -20,6 +20,7 @@ class CreateTaskAcceptancesTable extends Migration
             $table->integer('task_complete')->default(0);
             $table->integer('task_cancel')->default(0);
             $table->integer('task_reject')->default(0);
+            $table->integer('task_create')->default(0);
             $table->year('year');
             $table->integer('month');
             $table->timestamps();
