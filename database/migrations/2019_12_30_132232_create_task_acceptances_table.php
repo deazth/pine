@@ -4,7 +4,7 @@ use Illuminate\Database\Migrations\Migration;
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Support\Facades\Schema;
 
-class CreateTaskHistoriesTable extends Migration
+class CreateTaskAcceptancesTable extends Migration
 {
     /**
      * Run the migrations.
@@ -13,11 +13,12 @@ class CreateTaskHistoriesTable extends Migration
      */
     public function up()
     {
-        Schema::create('task_histories', function (Blueprint $table) {
+        Schema::create('task_acceptances', function (Blueprint $table) {
             $table->bigIncrements('id');
-            $table->integer('task_id');
             $table->integer('user_id');
-            $table->string('description')->nullable();
+            $table->string('task_status'); //accept/complete/cancel/reject
+            $table->year('year');
+            $table->integer('month');
             $table->timestamps();
         });
     }
@@ -29,6 +30,6 @@ class CreateTaskHistoriesTable extends Migration
      */
     public function down()
     {
-        Schema::dropIfExists('task_histories');
+        Schema::dropIfExists('task_acceptances');
     }
 }

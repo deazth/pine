@@ -19,6 +19,12 @@ class CreateTasksTable extends Migration
             $table->string('descr')->nullable();
             $table->integer('user_id');
             $table->string('assign_id')->nullable();
+            $table->string('parent_id')->nullable();
+            $table->string('status');
+            $table->integer('rating_user')->nullable();
+            $table->integer('rating_assign')->nullable();
+            $table->date('submit_date')->nullable();
+            $table->date('complete_date')->nullable();
             $table->timestamps();
         });
     }
