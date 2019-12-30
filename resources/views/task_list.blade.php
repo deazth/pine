@@ -26,14 +26,17 @@
                         <th>Status</th>
                         <th>Action</th>
                     </tr>
-                    </thead>
+                </thead>
                 <tbody>
+
                     @foreach($task as $no=>$single)
-                        <tr>{{++$no}}</tr>
-                        <tr>{{$single->reference_no</tr>
-                        <tr>{{$single->name</tr>
-                        <tr>{{$single->status</tr>
-                        <tr></tr>
+                        <tr>
+                            <td>{{++$no}}</td>
+                            <td>{{$single->reference_no}}</td>
+                            <td>{{$single->name}}</td>
+                            <td>{{$single->status}}</td>
+                            <td></td>
+                        </tr>
                     @endforeach
                 </tbody>
             </table>

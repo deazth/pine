@@ -9,13 +9,18 @@
 @endif
 <div class="card">
     <div class="card-header">Task Request</div>
-        <div class="card-body">
-            <div class="container">
+    <div class="card-body">
+        <div class="container">
+            <form id="form" action="{{route('task.submitrequest')}}" method="POST">
+            @csrf
+                @if($task ?? '')   
+                    <input class="form-control" type="text" hidden name="inputid" value="{{$task->id}}" required>
+                @endif
+                <input class="form-control d-none" type="text" hidden id="inputassignid" name="inputassignid">
                 <div class="row">
                     <div class="col-lg-10">
                         <div class="container">
                             <div class="row">
-                                <!--  -->
                                 <div class="col-lg-2">Reference No:</div>
                                 <div class="col-lg-10">
                                     @if($task ?? '') 
@@ -36,16 +41,16 @@
                                 <div class="mt-2 col-lg-12"></div>
                                 <div class="col-lg-2">Title:</div>
                                 <div class="col-lg-10">
-                                    <input class="form-control" type="text" name="inputname" 
+                                    <input class="form-control" type="text" id="inputname" name="inputname" 
                                     @if($task ?? '') 
                                         value="{{$task->refno}}" disabled
                                     @endif
-                                    >
+                                    required>
                                 </div>
                                 <div class="mt-2 col-lg-12"></div>
                                 <div class="col-lg-2">Description:</div>
                                 <div class="col-lg-10">
-                                    <textarea class="form-control" type="text" name="inputdescription" 
+                                    <textarea class="form-control" type="text" id="inputdescription" name="inputdescription" 
                                     @if($task ?? '') 
                                         value="{{$task->refno}}" 
                                         @if($task->status!="Open")
@@ -53,7 +58,7 @@
                                         @endif
                                     @endif
                                     rows="5"
-                                    ></textarea>
+                                    required></textarea>
                                 </div>
                                 <div class="mt-2 col-lg-12"></div>
                                 <div class="col-lg-2">Skill Category:</div>
@@ -64,7 +69,7 @@
                                             disabled
                                         @endif
                                     @endif    
-                                    >
+                                    required>
                                         <option hidden disabled value="" 
                                             @if($task ?? '') 
                                                 @if($task->skill_cat_id=="") 
@@ -91,7 +96,7 @@
                                     @elseif($draft ?? '') 
                                         disabled
                                     @endif    
-                                    >
+                                    required>
                                         @if($task ?? '') 
                                             @foreach($skill as $single)
                                                 <option value="{{$single->id}}">{{$single->name}}</option>
@@ -108,15 +113,47 @@
                 </div>
                 <div class="mt-5 col-lg-12"></div>
                 <div class="text-center">
-                    <button class="btn btn-primary">Advertise Task</button>
-                    <button class="btn btn-primary">Create Task</button>
-                    <button class="btn btn-primary">Assign Task</button>
+                    <button type="submit" class="btn btn-primary">Advertise Task</button>
+                    <button id="assign" type="button" class="btn btn-success" data-toggle="modal" data-target="#ass">Propose Assignee</button>
                 </div>
+            </form>
+        </div>
+    </div> 
+</div>
+
+
+<!-- Task Parent -->
+<!-- <div class="card">
+    <div class="card-header">Task Request</div>
+    <div class="card-body">
+    </div>
+</div> -->
+
+@endsection
+
+<div id="assignee" class="modal fade" role="dialog">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h4 class="modal-title">Propose Assignee</h4>
+                <button type="button" class="close" data-dismiss="modal">&times;</button>
+            
+            </div>
+            <div class="modal-body text-center">
+                <select class="form-control" id="inputassignee" name="inputassignee">
+                    @foreach($assignee as $single)
+                    <option hidden disabled value="" selected>Select Assignee</option>
+                    <option value="{{$single->id}}"> {{ucfirst("$single->staff_no ")}} - {{ucfirst("$single->name ")}}</option>
+                    @endforeach
+                </select>
+                <button id="assignassignee" class="mt-4 btn btn-primary">Propose Assignee</button>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
             </div>
         </div>
     </div>
 </div>
-@endsection
 
 @section('after_scripts')
 <script type="text/javascript">
@@ -142,5 +179,27 @@
     function updateResp(item, index){
         $( "#inputskill" ).append('<option value="'+item.id+'">'+item.name+'</option>');  
     }
+
+    
+    $("#assign").on('click', function(){
+        if($('#inputname').get(0).checkValidity()==false){
+            $('#inputname').get(0).reportValidity();
+        }else if($('#inputdescription').get(0).checkValidity()==false){
+            $('#inputdescription').get(0).reportValidity();
+        }else if($('#inputskillcat').get(0).checkValidity()==false){
+            $('#inputskillcat').get(0).reportValidity();
+        }else if($('#inputskill').get(0).checkValidity()==false){
+            $('#inputskill').get(0).reportValidity();
+        }else{
+            $("#assignee").modal("show");
+        }
+    });    
+    
+    $("#assignassignee").on('click', function(){
+        $("#inputassignid").removeClass("d-none");
+        $("#inputassignid").val($("#inputassignee").val());
+        $("#form").submit();
+
+    });
 </script>
 @stop

@@ -21,9 +21,12 @@ Route::group(['middleware' => ['admin']], function () {
   Route::get('/graf', 'SampleController@geraf')->name('geraf');
   Route::get('/datable', 'SampleController@datable')->name('datable');
   Route::get('/profile', 'UserController@showProfile')->name('user.profile');
+
+  //Task
   Route::get( '/task/request','TaskController@showTaskRequest')->name('task.showrequest');
   Route::get( '/task/request/new','TaskController@showTaskRequestNew')->name('task.newrequest');
   Route::post( '/task/request/new','TaskController@showTaskRequestNew')->name('task.newrequest');
+  Route::post( '/task/request/submit','TaskController@submitTaskRequest')->name('task.submitrequest');
   Route::get('/task/request/getskill', 'TaskController@taskRequestGetSkill')->name('task.getskill');
   Route::get( '/task/list','TaskController@showTaskList')->name('task.showlist');
   Route::get( '/task/open','TaskController@showTaskOpen')->name('task.showopen'); //Advertisement
@@ -33,3 +36,6 @@ Route::group(['middleware' => ['admin']], function () {
   Route::post( '/user/skill/store','UserSkillController@store')->name('userskill.store');
   Route::post( '/user/skill/destroy','UserSkillController@destroy')->name('userskill.destroy');
 });
+
+// so-called API
+Route::get( '/user/image','UserController@getStaffImage')->name('user.image');
