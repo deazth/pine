@@ -248,9 +248,16 @@ class TaskController extends Controller
 public function assigneeComplete(Request $req)
 {
     $task = Task::find($req->task_id);
+    $task->status = 'Pending Verification';
+    $task->save();
 
 
-    dd($req->task_id);
+
+    return redirect(route('task.showpending',[],false))->with([
+        'feedback' => true,
+        'feedback_text' => "Successfully submit the task for verification!",
+        'feedback_type' => "success"
+    ]);
   }
 
 
@@ -288,6 +295,23 @@ public function assigneeComplete(Request $req)
       }
 
     }
+
+
+
+    public function assigneeCancel(Request $req)
+    {
+        $task = Task::find($req->task_id);
+        $task->status = 'Request to Cancel';
+        $task->save();
+
+
+
+        return redirect(route('task.showpending',[],false))->with([
+            'feedback' => true,
+            'feedback_text' => "The task has been cancelled and redirected to requestor!!",
+            'feedback_type' => "danger"
+        ]);
+      }
 
 
 }
