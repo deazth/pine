@@ -160,6 +160,13 @@
                                 <div class="mb-4 text-danger">The assignee has requested to cancel his progress</div>
                                 <a href="{{route('task.cancellationreject')}}" onClick="confirm('Reject assignee request to cancel?')"><button type="button" class="btn btn-danger">Reject</button></a>
                                 <a href="{{route('task.cancellationapprove')}}" onClick="confirm('Approve assignee request to cancel?')"><button type="button" class="btn btn-success">Approve</button>
+                               <!---- resquester action --->
+                                  @elseif($task->status=="Pending Verification")
+                                      <div class="mb-4 text-info">The assignee has marked this task as completed</div>
+                                      <a href="{{route('task.requesterReject',['task_id'=>$task->id ],false) }}" onClick="confirm('Mark incomplete and return to assignee?')"><button type="button" class="btn btn-danger">Reject</button></a>
+                                      <a href="{{route('task.cancellationapprove')}}" onClick="confirm('Approve assignee request to cancel?')"><button type="button" class="btn btn-success">Approve</button>
+
+                            <!---- resquester action  end--->
                             @endif
                         @elseif($task->assign_id==$user)
                             @if($task->status=="Proposed")
