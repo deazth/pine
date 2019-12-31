@@ -37,6 +37,9 @@ class Task extends Model
     public function interaction()
     {
         return $this->hasMany(TaskInteraction::class, 'task_id');
+    }
+
+    
     public function applicant()
     {
         return $this->hasMany(TaskAdsApplication::class,'task_id');
