@@ -28,10 +28,11 @@ Route::group(['middleware' => ['admin']], function () {
   Route::post( '/task/request/new','TaskController@showTaskRequestNew')->name('task.newrequest');
   Route::post( '/task/request/submit','TaskController@submitTaskRequest')->name('task.submitrequest');
   Route::post( '/task/request/view','TaskController@viewTaskRequest')->name('task.viewrequest');
-  Route::post( '/task/request/view/propose/reject','TaskController@proposeReject')->name('task.proposedreject');
-  Route::post( '/task/request/view/propose/accept','TaskController@proposeAccept')->name('task.proposedaccept');
-  Route::post( '/task/request/view/cancel/reject','TaskController@cancellationReject')->name('task.cancellationreject');
-  Route::post( '/task/request/view/cancel/approve','TaskController@cancellationApprove')->name('task.cancellationapprove');
+  Route::get( '/task/request/view','TaskController@viewTaskRequest')->name('task.viewrequest');
+  Route::get( '/task/request/view/propose/reject','TaskController@proposeReject')->name('task.proposedreject');
+  Route::get( '/task/request/view/propose/accept','TaskController@proposeAccept')->name('task.proposedaccept');
+  Route::get( '/task/request/view/cancel/reject','TaskController@cancellationReject')->name('task.cancellationreject');
+  Route::get( '/task/request/view/cancel/approve','TaskController@cancellationApprove')->name('task.cancellationapprove');
   // Route::get( '/task/request/view','TaskController@viewTaskRequest')->name('task.viewrequest');
   Route::get('/task/request/getskill', 'TaskController@taskRequestGetSkill')->name('task.getskill');
   Route::get( '/task/list','TaskController@showTaskList')->name('task.showlist');
@@ -39,8 +40,12 @@ Route::group(['middleware' => ['admin']], function () {
   Route::get( '/task/open','TaskController@showTaskOpen')->name('task.showopen'); //Advertisement
   Route::get( '/task/assigneeComplete','TaskController@assigneeComplete')->name('task.assigneeComplete');
   Route::post( '/task/apply','TaskController@applyForAds')->name('task.apply'); //Advertisement
-  Route::get( '/task/assigneeCancel','TaskController@assigneeCancel')->name('task.assigneeCancel');
-  Route::get( '/task/requesterReject','TaskController@requesterReject')->name('task.requesterReject'); 
+
+
+
+    Route::get( '/task/assigneeCancel','TaskController@assigneeCancel')->name('task.assigneeCancel');
+    Route::get( '/task/assigneeExtend','TaskController@assigneeExtend')->name('task.assigneeExtend');
+      Route::get( '/task/requesterReject','TaskController@requesterReject')->name('task.requesterReject');
 
   Route::get( '/user/skill/','UserSkillController@index')->name('userskill.index');
   Route::get( '/user/skill/create','UserSkillController@create')->name('userskill.create');
