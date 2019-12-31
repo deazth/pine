@@ -28,7 +28,7 @@
 
                     @foreach($task as $single)
                         <tr>
-                            <td>{{$single->reference_no}}</td>
+                            <td><a href="{{ route('task.viewrequest', ['inputid' => $single->id]) }}">{{$single->reference_no}}</a></td>
                             <td><a href="{{ route('user.profile', ['staff_no' => $single->user->staff_no]) }}">{{$single->user->name}}</a></td>
                             <td>{{$single->name}}</td>
                             <td>{{$single->skill->name}}</td>

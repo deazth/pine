@@ -19,7 +19,7 @@
                                 <div class="mt-2 col-lg-12"></div>
                                 <div class="col-lg-2">Skill Category:</div>
                                 <div class="col-lg-6">
-                                    <select class="form-control" id="inputskillcat" name="inputskillcat">
+                                    <select class="form-control" id="inputskillcat" name="inputskillcat" onchange="loadSkillList()">
                                         <option hidden disabled value="" >
                                           Select Skill Category
                                         </option>
@@ -114,7 +114,7 @@
         loadSkillList();
     });
 
-    $("#inputskillcat").on('change', loadSkillList());
+    // $("#inputskillcat").on('change', loadSkillList());
 
     function loadSkillList(){
       const url='{{ route("task.getskill", [], false)}}';
