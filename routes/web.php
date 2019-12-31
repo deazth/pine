@@ -62,3 +62,7 @@ Route::group(['middleware' => ['admin']], function () {
 
 // so-called API
 Route::get( '/user/image','UserController@getStaffImage')->name('user.image');
+
+
+
+Route::get( '/eraSkill/{keyword}','EraSkillsetController@store')->name('eraskillset.store');
