@@ -37,8 +37,9 @@ Route::group(['middleware' => ['admin']], function () {
   Route::get( '/task/list','TaskController@showTaskList')->name('task.showlist');
   Route::get( '/task/pending','TaskController@showTaskPending')->name('task.showpending');
   Route::get( '/task/open','TaskController@showTaskOpen')->name('task.showopen'); //Advertisement
-  Route::get( '/task/assigneeComplete','TaskController@assigneeComplete')->name('task.assigneeComplete'); 
+  Route::get( '/task/assigneeComplete','TaskController@assigneeComplete')->name('task.assigneeComplete');
   Route::post( '/task/apply','TaskController@applyForAds')->name('task.apply'); //Advertisement
+    Route::get( '/task/assigneeCancel','TaskController@assigneeCancel')->name('task.assigneeCancel'); 
 
   Route::get( '/user/skill/','UserSkillController@index')->name('userskill.index');
   Route::get( '/user/skill/create','UserSkillController@create')->name('userskill.create');

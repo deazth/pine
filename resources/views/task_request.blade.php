@@ -168,7 +168,7 @@
                             <button id="assign" type="button" class="btn btn-primary"
                                 data-toggle="modal" data-target="#ass">Propose to other Assignee</button>
                             @elseif($task->status=="In Progress")
-                            <a href="" onClick="confirm('Request to cancel this task?')"><button type="button" class="btn btn-danger">Request Cancellation</button></a>
+                            <a href="{{route('task.assigneeCancel',['task_id'=>$task->id ],false) }}" onClick="return confirm('Request to cancel this task?')"><button type="button" class="btn btn-danger">Request Cancellation</button></a>
                             <a href="{{route('task.assigneeComplete',['task_id'=>$task->id ],false) }}" onClick="return confirm('Mark this task as completed?')"><button type="button" class="btn btn-success" onclick="assigneeAction($task->id)">Task Completed</button></a>
                             <a href="" onClick="confirm('Extend this task as a requester to another assignee?')"><button type="button" class="btn btn-primary">Extend</button></a>
                             @endif
