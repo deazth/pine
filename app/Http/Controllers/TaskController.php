@@ -110,7 +110,9 @@ class TaskController extends Controller
 
     public function showTaskOpen(Request $req)
     {
-        $task = Task::where('status', 'Advertised')->orderBy('created_at')->get();
+        $task = Task::where('status', 'Advertised')
+          ->where('user_id', '!=', backpack_user()->id)
+          ->orderBy('created_at')->get();
         return view('task_advert', ['task' => $task]);
     }
 
@@ -133,7 +135,7 @@ class TaskController extends Controller
     }
 
     public function showTaskRequestNew(Request $req){
-        $draft = array(date("Ymd")."-".sprintf("%08d", backpack_user()->id)."-".rand(10000,99999), "Draft", backpack_user()->staff_no, backpack_user()->name);
+        $draft = array(date("Ymd")."-".sprintf("%08d", backpack_user()->id)."-".rand(10000,99999), "Draft", backpack_user()->staff_no, backpack_user()->name, $req->session()->get('parentid'), $req->session()->get('parentrefno'), $req->session()->get('parentname'), $req->session()->get('parentdate'));
         Session::put(['task' => [], 'draft' => $draft]);
         return redirect(route('task.showrequest',[],false));
     }
@@ -220,6 +222,10 @@ class TaskController extends Controller
             $new = Task::find($req->inputid);
             $new->reference_no = $req->inputref;
         }
+        if($req->inputparentid!=null){
+            $new->parent_id = $req->inputparentid;
+        }
+        
         $new->name = $req->inputname;
         $new->descr = $req->inputdescription;
         $new->skill_id = $req->inputskill;
@@ -310,6 +316,19 @@ public function assigneeComplete(Request $req)
             'feedback' => true,
             'feedback_text' => "The task has been cancelled and redirected to requester!!",
             'feedback_type' => "success"
+        ]);
+      }
+    public function assigneeExtend(Request $req)
+    {
+        $task = Task::find($req->task_id);
+        return redirect(route('task.newrequest',[],false))->with([
+            'feedback' => true,
+            'feedback_text' => "The task has been cancelled and redirected to requester!!",
+            'feedback_type' => "success",
+            'parentid' => $req->task_id,
+            'parentrefno' => $task->reference_no,
+            'parentname' => $task->name,
+            'parentdate' => $task->created_at
         ]);
       }
 

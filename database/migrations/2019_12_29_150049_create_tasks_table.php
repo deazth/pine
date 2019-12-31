@@ -28,8 +28,9 @@ class CreateTasksTable extends Migration
             $table->integer('rating_assign')->nullable();
             $table->string('success_rating_user')->nullable();
             $table->string('success_rating_assign')->nullable();
-            $table->date('submit_date')->nullable();
-            $table->date('complete_date')->nullable();
+            $table->datetime('submit_date')->nullable();
+            $table->datetime('complete_date')->nullable();
+            $table->datetime('accepted_date')->nullable();
             $table->timestamps();
         });
     }

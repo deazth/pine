@@ -24,9 +24,29 @@ class Task extends Model
         return $this->belongsTo(Skill::class,'skill_id');
     }
 
+    public function parent()
+    {
+        return $this->belongsTo(Task::class,'parent_id');
+    }
+
+    public function child()
+    {
+        return $this->hasMany(Task::class, 'parent_id');
+    }
+
+    public function interaction()
+    {
+        return $this->hasMany(TaskInteraction::class, 'task_id');
+    }
+
+    
+    public function applicant()
+    {
+        return $this->hasMany(TaskAdsApplication::class,'task_id');
+    }
+
     public function iHaveApplied($user_id){
-      $ap = TaskAdsApplication::where('task_id', $this->id)
-        ->where('user_id', $user_id)->first();
+      $ap = $this->applicant->where('user_id', $user_id)->first();
 
       if($ap){
         return true;

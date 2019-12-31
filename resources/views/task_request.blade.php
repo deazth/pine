@@ -16,6 +16,11 @@
                 @if($task ?? '')
                     <input class="form-control" type="text" hidden name="inputid" value="{{$task->id}}" required>
                     <input class="form-control" type="text" hidden name="inputref" value="{{$task->reference_no}}" required>
+                @elseif($draft ?? '')
+                    @if($draft[4]!="")
+                    <input class="form-control" type="text" hidden name="inputparentid" value="{{$draft[4]}}" required>
+                    
+                    @endif
                 @endif
                 <input class="form-control d-none" type="text" hidden id="inputassignid" name="inputassignid">
                 <div class="row">
@@ -194,7 +199,124 @@
     </div>
 </div>
 
+@if($draft ?? '')
+    @if($draft[4]!="")
+    <div class="card">
+        <div class="card-header">Original Task</div>
+        <div class="card-body">
+            <div class="container">
+                <div class="table-responsive">
+                    <table id="table" class="table table-bordered">
+                        <thead>
+                            <tr>
+                                <th>Reference No</th>
+                                <th>Task title</th>
+                                <th>Date Created</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr>
+                                <td><a href="{{route('task.viewrequest',['inputid'=>$draft[4] ],false) }}" onClick="return confirm('View parent task?')">{{$draft[5]}}
+                                </a></td>
+                                <td>{{$draft[6]}}</td>
+                                <td>{{$draft[7]}}</td>
+                            </tr> 
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+    </div>
+    @endif
+@endif
 
+@if($task ?? '')
+    @if($task->parent_id!="")
+    <div class="card">
+        <div class="card-header">Original Task</div>
+        <div class="card-body">
+            <div class="container">
+                <div class="table-responsive">
+                    <table id="table" class="table table-bordered">
+                        <thead>
+                            <tr>
+                                <th>Reference No</th>
+                                <th>Task title</th>
+                                <th>Date Created</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr>
+                                <td><a href="{{route('task.viewrequest',['inputid'=>$task->parent->id ],false) }}" onClick="return confirm('View parent task?')">{{$task->parent->reference_no}}
+                                </a></td>
+                                <td>{{$task->parent->name}}</td>
+                                <td>{{$task->parent->created_at}}</td>
+                            </tr> 
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+    </div>
+    @endif
+    @if(count($task->child)!=0)
+    <div class="card">
+        <div class="card-header">Child Task</div>
+        <div class="card-body">
+            <div class="container">
+                <div class="table-responsive">
+                    <table id="table" class="table table-bordered">
+                        <thead>
+                            <tr>
+                                <th>Reference No</th>
+                                <th>Task title</th>
+                                <th>Date Created</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            @foreach($task->child as $single)
+                            <tr>
+                                <td><a href="{{route('task.viewrequest',['inputid'=>$single->id ],false) }}" onClick="return confirm('View parent task?')">{{$single->reference_no}}
+                                </a></td>
+                                <td>{{$single->name}}</td>
+                                <td>{{$single->created_at}}</td>
+                            </tr> 
+                            @endforeach
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+    </div>
+    @endif
+    <div class="container">
+        <div class="row">
+            @if(count($task->interaction)!=0)
+            <div class="col-lg-6">
+                <div class="card">
+                    <div class="card-header">Task Interaction</div>
+                    <div class="card-body">
+                        @foreach($task->interction as $single)
+                            <div class="card">
+                                <div class="card-body">
+                                    @if($single->user_id==$task->user_id)
+                                        <div class="w-100" style="text-align: left">{{$single->user->name}}</div>
+                                    @else
+                                        <div class="w-100" style="text-align: right">{{$single->user->name}}</div>
+                                    @endif
+                                    <div class="w-100" style="text-align: center">{{$single->created_at}}</div>
+                                    {{$single->message}}
+                                </div>
+                            </div>
+                        @endforeach
+                        
+                    </div>
+                </div>
+            </div>
+            @endif
+        </div>
+    </div>
+@endif
 
 
 <!-- Task Parent -->
