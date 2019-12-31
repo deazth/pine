@@ -14,7 +14,9 @@ class CreateEraSkillsetsTable extends Migration
     public function up()
     {
         Schema::create('era_skillsets', function (Blueprint $table) {
-            $table->bigIncrements('id');
+            $table->integer('id')->primary('id')->unsigned();
+            $table->string('skill');
+
             $table->timestamps();
         });
     }
