@@ -6,6 +6,7 @@ use App\Task;
 use App\Models\Skill;
 use App\Models\SkillCat;
 use App\User;
+use App\TaskAdsApplication;
 use Session;
 use Illuminate\Http\Request;
 
@@ -107,6 +108,12 @@ class TaskController extends Controller
         return view('task_list', ['task' => $task]);
     }
 
+    public function showTaskOpen(Request $req)
+    {
+        $task = Task::where('status', 'Advertised')->orderBy('created_at')->get();
+        return view('task_advert', ['task' => $task]);
+    }
+
     public function showTaskRequest(Request $req){
         $skillcat = SkillCat::all();
         $assignee = User::all();
@@ -150,19 +157,16 @@ class TaskController extends Controller
     }
 
     public function submitTaskRequest(Request $req){
-        // if($req->inputtype=="advert"){
         if($req->inputid==null){
             $new = new Task;
             $new->reference_no = $req->session()->get('draft')[0];
+            $new->user_id = backpack_user()->id;
         }else{
             $new = Task::find($req->inputid);
             $new->reference_no = $req->inputref;
         }
-        // dd($req->session()->get('draft'));
-        // dd($req->inputdescription);
         $new->name = $req->inputname;
         $new->descr = $req->inputdescription;
-        $new->user_id = backpack_user()->id;
         $new->skill_id = $req->inputskill;
         $new->skill_cat_id = $req->inputskillcat;
         if($req->inputassignid!=null){
@@ -186,16 +190,47 @@ class TaskController extends Controller
         }
     }
 
+public function assigneeComplete(Request $req)
+{
+    $task = Task::find($req->task_id);
 
 
+    dd($req->task_id);
+  }
 
 
-    public function assigneeComplete(Request $req)
-    {
-        $task = Task::find($req->task_id);
-        
+    public function applyForAds(Request $req){
+      $dattask = Task::find($req->inputid);
 
-        dd($req->task_id);
+      if($dattask){
+
+        if($dattask->iHaveApplied(backpack_user()->id)){
+          return redirect()->back()->with([
+              'feedback' => true,
+              'feedback_text' => "You have already applied for this Ads",
+              'feedback_type' => "warning"
+          ]);
+        }
+
+
+        $nuapply = new TaskAdsApplication;
+        $nuapply->user_id = backpack_user()->id;
+        $nuapply->task_id = $dattask->id;
+        $nuapply->save();
+
+        return redirect()->back()->with([
+            'feedback' => true,
+            'feedback_text' => "Application submitted to requestor",
+            'feedback_type' => "success"
+        ]);
+
+      } else {
+        return redirect()->back()->with([
+            'feedback' => true,
+            'feedback_text' => "Selected Advertisement no longer available",
+            'feedback_type' => "warning"
+        ]);
+      }
 
     }
 
