@@ -156,20 +156,72 @@ class TaskController extends Controller
         return $arr;
     }
 
+    public function proposeReject(Request $req)
+    {
+        $task = Task::find($req->task_id);
+        $task->status = "Open";
+        $task->assign_id = null;
+        $task->save();
+        return redirect(route('task.showpending',[],false))->with([
+            'feedback' => true,
+            'feedback_text' => "Successfully rejected new task request!",
+            'feedback_type' => "warning"
+        ]);
+    }
+
+    public function proposeAccept(Request $req)
+    {
+        $task = Task::find($req->task_id);
+        $task->status = "In Progress";
+        $task->save();
+        $task = array($task->id, $task->skill_cat_id);
+        Session::put(['task' => $task, 'draft' => []]);
+        return redirect(route('task.showrequest',[],false))->with([
+            'feedback' => true,
+            'feedback_text' => "Successfully accepted new task request!",
+            'feedback_type' => "success"
+        ]);
+    }
+
+    public function cancellationReject(Request $req)
+    {
+        $task = Task::find($req->task_id);
+        $task->status = "In Progress";
+        $task->save();
+        return redirect(route('task.showlist',[],false))->with([
+            'feedback' => true,
+            'feedback_text' => "Successfully rejected task cancellation request!",
+            'feedback_type' => "warning"
+        ]);
+    }
+
+    public function cancellationApprove(Request $req)
+    {
+        $task = Task::find($req->task_id);
+        $task->status = "Open";
+        $task->assign_id = null;
+        $task->save();
+        $task = array($task->id, $task->skill_cat_id);
+        Session::put(['task' => $task, 'draft' => []]);
+        return redirect(route('task.showrequest',[],false))->with([
+            'feedback' => true,
+            'feedback_text' => "Successfully approved task cancellation request!",
+            'feedback_type' => "success"
+        ]);
+    }
+
+
     public function submitTaskRequest(Request $req){
-        // if($req->inputtype=="advert"){   
         if($req->inputid==null){
             $new = new Task;
             $new->reference_no = $req->session()->get('draft')[0];
+            $new->user_id = backpack_user()->id;
         }else{
             $new = Task::find($req->inputid);
-            $new->reference_no = $req->inputref;    
+            $new->reference_no = $req->inputref;
         }
-        // dd($req->session()->get('draft'));
-        // dd($req->inputdescription);
         $new->name = $req->inputname;
         $new->descr = $req->inputdescription;
-        $new->user_id = backpack_user()->id;
         $new->skill_id = $req->inputskill;
         $new->skill_cat_id = $req->inputskillcat;
         if($req->inputassignid!=null){
@@ -192,6 +244,22 @@ class TaskController extends Controller
             ]);
         }
     }
+
+public function assigneeComplete(Request $req)
+{
+    $task = Task::find($req->task_id);
+    $task->status = 'Pending Verification';
+    $task->save();
+
+
+
+    return redirect(route('task.showpending',[],false))->with([
+        'feedback' => true,
+        'feedback_text' => "Successfully submit the task for verification!",
+        'feedback_type' => "success"
+    ]);
+  }
+
 
     public function applyForAds(Request $req){
       $dattask = Task::find($req->inputid);
@@ -227,6 +295,23 @@ class TaskController extends Controller
       }
 
     }
+
+
+
+    public function assigneeCancel(Request $req)
+    {
+        $task = Task::find($req->task_id);
+        $task->status = 'Request to Cancel';
+        $task->save();
+
+
+
+        return redirect(route('task.showpending',[],false))->with([
+            'feedback' => true,
+            'feedback_text' => "The task has been cancelled and redirected to requester!!",
+            'feedback_type' => "success"
+        ]);
+      }
 
 
 }
