@@ -109,10 +109,10 @@ class TaskController extends Controller
             // $task = $req->session()->get('task');
             $task = Task::where('id', $req->session()->get('task')[0])->first();
             $skill = Skill::where('skill_cat_id', $req->session()->get('task')[1])->get();
-            return view('task_request', ['assignee' => $assignee, 'task' => $task, 'skillcat' => $skillcat, 'skill' => $skill]);
+            return view('task_request', ['assignee' => $assignee, 'task' => $task, 'skillcat' => $skillcat, 'skill' => $skill, 'user' => backpack_user()->id]);
         }else if($req->session()->get('draft')!=null){
             $draft = $req->session()->get('draft');
-            return view('task_request', ['assignee' => $assignee, 'draft' => $draft, 'skillcat' => $skillcat]);
+            return view('task_request', ['assignee' => $assignee, 'draft' => $draft, 'skillcat' => $skillcat, 'user' => backpack_user()->id]);
         }else{
 
             return redirect(route('task.showlist',[],false));

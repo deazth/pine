@@ -60,7 +60,7 @@
                                 <div class="mt-2 col-lg-12"></div>
                                 <div class="col-lg-2">Title:</div>
                                 <div class="col-lg-10">
-                                    <input class="form-control" type="text" id="inputname" name="inputname" 
+                                    <input class="form-control" type="text" id="inputname" name="inputname" placeholder="Insert Title"
                                     @if($task ?? '') 
                                         value="{{$task->name}}" disabled
                                     @endif
@@ -69,15 +69,7 @@
                                 <div class="mt-2 col-lg-12"></div>
                                 <div class="col-lg-2">Description:</div>
                                 <div class="col-lg-10">
-                                    <textarea class="form-control" type="text" id="inputdescription" name="inputdescription" 
-                                    @if($task ?? '') 
-                                        @if($task->status!="Open")
-                                            disabled
-                                        @endif
-                                    @endif
-                                    rows="5"
-                                    required>@if($task ?? ''){{$task->descr}}@endif
-                                    </textarea>
+                                    <textarea class="form-control" type="text" id="inputdescription" name="inputdescription" @if($task ?? '') @if($task->status!="Open") disabled @endif @endif rows="5" required placeholder="Insert Description">@if($task ?? ''){{$task->descr}}@endif</textarea>
                                 </div>
                                 <div class="mt-2 col-lg-12"></div>
                                 <div class="col-lg-2">Skill Category:</div>
@@ -133,11 +125,25 @@
                 <div class="mt-5 col-lg-12"></div>
                 <div class="text-center">
                     @if($task ?? '')
-                        @if($task->status=="Open")
-                            <button type="submit" class="btn btn-primary">Advertise Task</button>
-                        @endif
-                        @if($task->status=="Open")
-                            <button id="assign" type="button" class="btn btn-success" data-toggle="modal" data-target="#ass">Propose Assignee</button>
+                        @if($task->user_id==$user)
+                            @if($task->status=="Open")
+                                <button type="submit" class="btn btn-primary">Advertise Task</button>
+                                <button id="assign" type="button" class="btn btn-success" data-toggle="modal" data-target="#ass">Propose Assignee</button>
+                            @endif
+                            if($task->status=="Request to Cancel")
+                                <div>The assigne has requested to cancel his progress</div>
+                                <button type="button" class="btn btn-danger">Reject</button>
+                                <button type="button" class="btn btn-success">Approve</button>
+                            @endif
+                        @elseif($task->assign_id==$user)
+                            @if($task->status=="Proposed")
+                                <button type="button" class="btn btn-danger">Reject</button>
+                                <button type="button" class="btn btn-success">Accept</button>
+                            @endif
+                            @if($task->status=="In Progress")
+                                <button type="button" class="btn btn-danger">Request Cancellation</button>
+                                <button type="button" class="btn btn-success">Task Completed</button>
+                            @endif
                         @endif
                     @endif
                     @if($draft ?? '')
@@ -170,9 +176,11 @@
             </div>
             <div class="modal-body text-center">
                 <select class="form-control" id="inputassignee" name="inputassignee">
-                    @foreach($assignee as $single)
                     <option hidden disabled value="" selected>Select Assignee</option>
-                    <option value="{{$single->id}}"> {{ucfirst("$single->staff_no ")}} - {{ucfirst("$single->name ")}}</option>
+                    @foreach($assignee as $single)
+                        @if($single->id!=$user)
+                            <option value="{{$single->id}}"> {{ucfirst("$single->staff_no ")}} - {{ucfirst("$single->name ")}}</option>
+                        @endif
                     @endforeach
                 </select>
                 <button id="assignassignee" class="mt-4 btn btn-primary">Propose Assignee</button>
