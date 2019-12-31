@@ -56,7 +56,7 @@
       @endif
       @if(isset($chart4))
       <div class="card">
-        <div class="card-header">Stat on SUCCESS</div>
+        <div class="card-header">Stat on SUCCESS as Assignee</div>
         <div class="card-body">
           {!! $chart4->container() !!}
         </div>
