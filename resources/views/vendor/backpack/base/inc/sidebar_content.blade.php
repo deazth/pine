@@ -21,5 +21,6 @@
 </li>
 <li class="nav-title">Task</li>
 <li class="nav-item"><a class="nav-link" href="{{ route('task.newrequest') }}"><i class="fa fa-dashboard nav-icon"></i>Request New Task</a></li>
-<li class="nav-item"><a class="nav-link" href="{{ route('task.showlist') }}"><i class="fa fa-dashboard nav-icon"></i>Task List</a></li>
+<li class="nav-item"><a class="nav-link" href="{{ route('task.showlist') }}"><i class="fa fa-dashboard nav-icon"></i>Requested Task</a></li>
+<li class="nav-item"><a class="nav-link" href="{{ route('task.showpending') }}"><i class="fa fa-dashboard nav-icon"></i>Pending Task</a></li>
 <li class="nav-item"><a class="nav-link" href="{{ route('task.showopen') }}"><i class="fa fa-dashboard nav-icon"></i>Open Task</a></li>
