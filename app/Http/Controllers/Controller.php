@@ -90,6 +90,22 @@ class Controller extends BaseController
 
         }
 
+        // 6. interaction send by the assignee
+        // $reass = \App\Task::where('user_id', backpack_user()->id)
+        //   ->whereNotNull('assign_id')->where('status', )->get();
+        //
+        // foreach($reass as $ous){
+        //   if($ous->applicant->count() > 0){
+        //     array_push($notiarr, [
+        //       'url' => route('task.viewrequest', ['inputid' => $ous->id]),
+        //       'text' => 'Someone applied for task ' . $ous->name,
+        //       'class' => 'fa fa-paper-plane',
+        //     ]);
+        //     $noticount++;
+        //   }
+        //
+        // }
+
         session()->flash('noti_count',$noticount);
         session()->flash('noti_list', $notiarr);
 
