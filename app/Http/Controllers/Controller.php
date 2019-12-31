@@ -79,12 +79,15 @@ class Controller extends BaseController
           ->where('status', 'Advertised')->get();
 
         foreach($reass as $ous){
-          array_push($notiarr, [
-            'url' => route('task.viewrequest', ['inputid' => $ous->id]),
-            'text' => 'Someone applied for task ' . $ous->name,
-            'class' => 'fa fa-heart',
-          ]);
-          $noticount++;
+          if($ous->applicant->count() > 0){
+            array_push($notiarr, [
+              'url' => route('task.viewrequest', ['inputid' => $ous->id]),
+              'text' => 'Someone applied for task ' . $ous->name,
+              'class' => 'fa fa-heart',
+            ]);
+            $noticount++;
+          }
+
         }
 
         session()->flash('noti_count',$noticount);

@@ -4,9 +4,16 @@ namespace App\Http\Controllers;
 
 use App\EraSkillset;
 use Illuminate\Http\Request;
+use GuzzleHttp\Client;
 
 class EraSkillsetController extends Controller
 {
+
+  protected $baseuri = "https://api.oip.tm.com.my/app/t/tmrnd.com.my/era/1.0.0/skillset/search/";
+  protected $options = [
+    'query' => ['api_key' => 'Z9HYE86CIElVjTEJuDOy2eBWPrL96et41wUmjL3M'],
+    'headers' => ['Authorization' => 'Bearer 5a107934-68de-38cd-9a34-60fa4ae46267']
+  ];
     /**
      * Display a listing of the resource.
      *
@@ -33,8 +40,19 @@ class EraSkillsetController extends Controller
      * @param  \Illuminate\Http\Request  $request
      * @return \Illuminate\Http\Response
      */
-    public function store(Request $request)
+    public function store($keyword)
     {
+      $reclient = new Client(["base_uri" => $this->baseuri]);
+        $request = $reclient->request('GET', $keyword, $this->options)->getBody()->getContents();
+
+        $ret = json_decode($request);
+return $ret;
+
+
+
+
+
+
         //
     }
 

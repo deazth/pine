@@ -36,4 +36,14 @@ class User extends Authenticatable
     protected $casts = [
         'email_verified_at' => 'datetime',
     ];
+
+    public function hasSkill($skill_id){
+      $hskill = UserSkill::where('user_id', $this->id)
+        ->where('skill_id', $skill_id)->first();
+      if($hskill){
+        return true;
+      }
+
+      return false;
+    }
 }

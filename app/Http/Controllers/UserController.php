@@ -201,7 +201,7 @@ class UserController extends Controller
 
       foreach ($tasklist as $value) {
         Calendar::event(
-            $value->name,
+            $value->name . '('.$value->rating_assign.')',
             false,
             new \DateTime($value->accepted_date),
             new \DateTime($value->submit_date),

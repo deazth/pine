@@ -174,7 +174,7 @@
                               						title="Edit" data-toggle="modal" data-target="#reqRateForm"
                               						data-id="{{$task->id}}">Approve</button>
 
-                            <!---- resquester action  end--->
+                            <!-- resquester action  end--->
 
 
 
@@ -228,6 +228,42 @@
         </div>
     </div>
 </div>
+
+@if($task->status == 'Advertised' && count($task->applicant)!=0)
+<div class="card">
+    <div class="card-header">Applicant</div>
+    <div class="card-body">
+        <div class="container">
+            <div class="table-responsive">
+                <table id="tapplicant" class="table table-bordered">
+                    <thead>
+                        <tr>
+                            <th>Staff Name</th>
+                            <th>Have requested Skil</th>
+                            <th>Staff Rating</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        @foreach($task->applicant as $single)
+                        <tr>
+                            <td><a href="{{ route('user.profile', ['staff_no' => $single->user->staff_no]) }}">{{$single->user->name}}</a></td>
+                            <td>
+                              @if($single->user->hasSkill($task->skill_id))
+                              Yes
+                              @else
+                              No
+                              @endif
+                            </td>
+                            <td>{{$single->user->total_do_count == 0 ? 0 : $single->user->total_do_rating / $single->user->total_do_count }}</td>
+                        </tr>
+                        @endforeach
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+</div>
+@endif
 
 @if($draft ?? '')
     @if($draft[4]!="")
@@ -327,11 +363,11 @@
                         @if(count($task->interaction)!=0)
                             @php($previous="")
                             @foreach($task->interaction as $single)
-                                
+
                             <div class="w-100 small" style="text-align: center">{{$single->created_at}}</div>
                                 <div class="card">
                                     @if($single->user_id!=$previous)
-                                        
+
                                         @if($single->user_id==$task->user_id)
                                             <div class="card-header">
                                                 <div class="w-100" style="text-align: left">{{$single->user->name}}</div>
@@ -339,14 +375,14 @@
                                         @else
                                             <div class="card-header">
                                             <div class="w-100" style="text-align: right">{{$single->user->name}}</div>
-        
+
                                             </div>
                                         @endif
-                                    
-                                       
-                                       
+
+
+
                                     @endif
-                                    
+
                                     <div class="card-body">
                                      {{$single->message}}
                                         </div>
@@ -358,7 +394,7 @@
                                 <form action="{{route('task.submitmsg')}}" method="POST">
                                     @csrf
                                     <input class="form-control" type="text" hidden name="inputid" value="{{$task->id}}" required>
-                    
+
                                     <textarea name="inputmessage" id="" class="form-control" rows="3"></textarea>
                                     <div class="text-center mt-4">
                                         <button type="submit" class="btn btn-primary">Send Message</button>
@@ -367,7 +403,7 @@
                         @endif
                     </div>
                 </div>
-                
+
             </div>
             <div class="col-lg-6">
                     <div class="card">
@@ -399,7 +435,7 @@
                 </div>
                 
         </div>
-            
+
 @endif
 
 @endsection
@@ -445,7 +481,7 @@
 		<div class="modal-content">
 
 
-				<div class="modal-header">We are glad the job are finish. </div>
+				<div class="modal-header">We are glad the job are finished. </div>
 				<form method="POST" action="{{route('task.requesterRate')}}">
 					@csrf
 					<div class="modal-body">
@@ -536,6 +572,12 @@ Please rate: 1 <input type="radio" value="1" selected name="rating_user"/>
 
 
 @section('after_scripts')
+<script type="text/javascript" src="{{ asset('packages/datatables.net/js/jquery.dataTables.min.js') }}"></script>
+<script type="text/javascript" src="{{ asset('packages/datatables.net-bs4/js/dataTables.bootstrap4.min.js') }}"></script>
+<script type="text/javascript" src="{{ asset('packages/datatables.net-responsive/js/dataTables.responsive.min.js') }}"></script>
+<script type="text/javascript" src="{{ asset('packages/datatables.net-responsive-bs4/js/responsive.bootstrap4.min.js') }}"></script>
+<script type="text/javascript" src="{{ asset('packages/datatables.net-fixedheader/js/dataTables.fixedHeader.min.js') }}"></script>
+<script type="text/javascript" src="{{ asset('packages/datatables.net-fixedheader-bs4/js/fixedHeader.bootstrap4.min.js') }}"></script>
 <script type="text/javascript">
     $("#inputskillcat").on('change', function(){
         const url='{{ route("task.getskill", [], false)}}';
@@ -615,16 +657,14 @@ Please rate: 1 <input type="radio" value="1" selected name="rating_user"/>
 
       });
 
+      $(document).ready(function() {
+          $('#table').DataTable({
+              "responsive": "true",
+              // "order" : [[1, "asc"]],
+              "searching": false,
+              "bSort": false
+          });
+      });
 
 </script>
 @stop
-
-@section('after_scripts')
-<script type="text/javascript" src="{{ asset('packages/datatables.net/js/jquery.dataTables.min.js') }}"></script>
-<script type="text/javascript" src="{{ asset('packages/datatables.net-bs4/js/dataTables.bootstrap4.min.js') }}"></script>
-<script type="text/javascript" src="{{ asset('packages/datatables.net-responsive/js/dataTables.responsive.min.js') }}"></script>
-<script type="text/javascript" src="{{ asset('packages/datatables.net-responsive-bs4/js/responsive.bootstrap4.min.js') }}"></script>
-<script type="text/javascript" src="{{ asset('packages/datatables.net-fixedheader/js/dataTables.fixedHeader.min.js') }}"></script>
-<script type="text/javascript" src="{{ asset('packages/datatables.net-fixedheader-bs4/js/fixedHeader.bootstrap4.min.js') }}"></script>
-
-@endsection
