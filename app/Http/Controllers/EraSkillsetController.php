@@ -45,8 +45,9 @@ class EraSkillsetController extends Controller
       $reclient = new Client(["base_uri" => $this->baseuri]);
         $request = $reclient->request('GET', $keyword, $this->options)->getBody()->getContents();
 
-        $ret = json_decode($request);
-return $ret;
+
+
+return $request;
 
 
 
