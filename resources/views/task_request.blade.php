@@ -328,11 +328,11 @@
                         @if(count($task->interaction)!=0)
                             @php($previous="")
                             @foreach($task->interaction as $single)
-                                
+
                             <div class="w-100 small" style="text-align: center">{{$single->created_at}}</div>
                                 <div class="card">
                                     @if($single->user_id!=$previous)
-                                        
+
                                         @if($single->user_id==$task->user_id)
                                             <div class="card-header">
                                                 <div class="w-100" style="text-align: left">{{$single->user->name}}</div>
@@ -340,14 +340,14 @@
                                         @else
                                             <div class="card-header">
                                             <div class="w-100" style="text-align: right">{{$single->user->name}}</div>
-        
+
                                             </div>
                                         @endif
-                                    
-                                       
-                                       
+
+
+
                                     @endif
-                                    
+
                                     <div class="card-body">
                                      {{$single->message}}
                                         </div>
@@ -359,7 +359,7 @@
                                 <form action="{{route('task.submitmsg')}}" method="POST">
                                     @csrf
                                     <input class="form-control" type="text" hidden name="inputid" value="{{$task->id}}" required>
-                    
+
                                     <textarea name="inputmessage" id="" class="form-control" rows="3"></textarea>
                                     <div class="text-center mt-4">
                                         <button type="submit" class="btn btn-primary">Send Message</button>
@@ -368,7 +368,7 @@
                         @endif
                     </div>
                 </div>
-                
+
             </div>
             <div class="col-lg-6">
                     <div class="card">
@@ -377,7 +377,7 @@
                     </div>
                 </div>
         </div>
-            
+
 @endif
 
 
@@ -612,5 +612,16 @@ Please rate: 1 <input type="radio" value="1" selected name="rating_user"/>
 <script type="text/javascript" src="{{ asset('packages/datatables.net-responsive-bs4/js/responsive.bootstrap4.min.js') }}"></script>
 <script type="text/javascript" src="{{ asset('packages/datatables.net-fixedheader/js/dataTables.fixedHeader.min.js') }}"></script>
 <script type="text/javascript" src="{{ asset('packages/datatables.net-fixedheader-bs4/js/fixedHeader.bootstrap4.min.js') }}"></script>
+
+<script type="text/javascript">
+    $(document).ready(function() {
+        $('#table').DataTable({
+            "responsive": "true",
+            // "order" : [[1, "asc"]],
+            "searching": false,
+            "bSort": false
+        });
+    });
+</script>
 
 @endsection
