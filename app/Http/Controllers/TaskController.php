@@ -159,6 +159,7 @@ class TaskController extends Controller
             $new->reference_no = $req->inputref;    
         }
         // dd($req->session()->get('draft'));
+        // dd($req->inputdescription);
         $new->name = $req->inputname;
         $new->descr = $req->inputdescription;
         $new->user_id = backpack_user()->id;

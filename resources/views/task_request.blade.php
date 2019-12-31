@@ -154,18 +154,18 @@
                                 data-toggle="modal" data-target="#ass">Propose to other Assignee</button>
                                 @endif
                             @elseif($task->status=="Request to Cancel")
-                                <div>The assignee has requested to cancel his progress</div>
-                                <button type="button" class="btn btn-danger">Reject</button>
-                                <button type="button" class="btn btn-success">Approve</button>
+                                <div class="mb-4 text-danger">The assignee has requested to cancel his progress</div>
+                                <a href="" onClick="confirm('Reject assignee request to cancel?')"><button type="button" class="btn btn-danger">Reject</button></a>
+                                <a href="" onClick="confirm('Approve assignee request to cancel?')"><button type="button" class="btn btn-success">Approve</button>
                             @endif
                         @elseif($task->assign_id==$user)
                             @if($task->status=="Proposed")
-                                <button type="button" class="btn btn-danger">Reject</button>
-                                <button type="button" class="btn btn-success">Accept</button>
+                            <a href="" onClick="confirm('Reject this task?')"><button type="button" class="btn btn-danger">Reject</button></a>
+                            <a href="" onClick="confirm('Accept this task?')"><button type="button" class="btn btn-success">Accept</button></a>
                             @elseif($task->status=="In Progress")
-                                <button type="button" class="btn btn-danger">Request Cancellation</button>
-                                <button type="button" class="btn btn-success">Task Completed</button>
-                                <button type="button" class="btn btn-warning">Task Extend</button>
+                            <a href="" onClick="confirm('Request to cancel this task?')"><button type="button" class="btn btn-danger">Request Cancellation</button></a>
+                            <a href="" onClick="confirm('Mark this task as completed?')"><button type="button" class="btn btn-success">Task Completed</button></a>
+                            <a href="" onClick="confirm('Extend this task as a requester to another assignee?')"><button type="button" class="btn btn-warning">Task Extend</button></a>
                             @endif
                         @endif
                     @endif
