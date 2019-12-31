@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use App\Task;
 use App\TaskInteraction;
+use App\TaskHistory;
 use App\Models\Skill;
 use App\Models\SkillCat;
 use App\User;
@@ -121,7 +122,11 @@ class TaskController extends Controller
         $assignee = User::all();
         // dd($req);
         if ($req->session()->get('task')!=null) {
-            // $task = $req->session()->get('task');
+            $taskm = TaskInteraction::where('user_id','!=',backpack_user()->id)->where('id', $req->session()->get('task')[0])->get();
+            foreach($taskm as $s){
+                $s->read = X;
+                $s->save();
+            }
             $task = Task::where('id', $req->session()->get('task')[0])->first();
             $skill = Skill::where('skill_cat_id', $req->session()->get('task')[1])->get();
 
@@ -209,6 +214,13 @@ class TaskController extends Controller
 
         $task = array($task->id, $task->skill_cat_id);
         Session::put(['task' => $task, 'draft' => []]);
+        $newl = new TaskHistory;
+        $newl->task_id = $req->task_id;
+        $newl->user_id = backpack_user()->id;
+        $assid = User::find(backpack_user()->id);
+        $newl->description = $assid->staff_no."-".$assid->name."has accepted task";
+        $newl->save();
+
         return redirect(route('task.showrequest', [], false))->with([
             'feedback' => true,
             'feedback_text' => "Successfully accepted new task request!",
@@ -221,6 +233,7 @@ class TaskController extends Controller
         $task = Task::find($req->task_id);
         $task->status = "In Progress";
         $task->save();
+
         return redirect(route('task.showlist', [], false))->with([
             'feedback' => true,
             'feedback_text' => "Successfully rejected task cancellation request!",
@@ -276,6 +289,25 @@ class TaskController extends Controller
             $new->assign_id = $req->inputassignid;
             $new->status = "Proposed";
             $new->save();
+            $newl = new TaskHistory;
+            if ($req->inputid==null) {
+                $newl->task_id = $new->id;
+            }else{
+                $newl->task_id = $req->$inputid;
+            }
+            $newl->user_id = backpack_user()->id;
+            $newl->description = "Created new task request";
+            $newl->save();
+            $newl = new TaskHistory;
+            if ($req->inputid==null) {
+                $newl->task_id = $new->id;
+            }else{
+                $newl->task_id = $req->$inputid;
+            }
+            $newl->user_id = backpack_user()->id;
+            $assid = User::find($req->inputassignid);
+            $newl->description = "Assigned task to ".$assid->staff_no."-".$assid->name;
+            $newl->save();
             return redirect(route('task.showlist', [], false))->with([
                 'feedback' => true,
                 'feedback_text' => "Successfully assigned new task request!",
@@ -285,6 +317,24 @@ class TaskController extends Controller
             $new->status = "Advertised";
             $new->assign_id = null;
             $new->save();
+            $newl = new TaskHistory;
+            if ($req->inputid==null) {
+                $newl->task_id = $new->id;
+            }else{
+                $newl->task_id = $req->$inputid;
+            }
+            $newl->user_id = backpack_user()->id;
+            $newl->description = "Created new task request";
+            $newl->save();
+            $newl = new TaskHistory;
+            if ($req->inputid==null) {
+                $newl->task_id = $new->id;
+            }else{
+                $newl->task_id = $req->$inputid;
+            }
+            $newl->user_id = backpack_user()->id;
+            $newl->description = "Advertised task";
+            $newl->save();
             return redirect(route('task.showlist', [], false))->with([
                 'feedback' => true,
                 'feedback_text' => "Successfully advertised new task request!",
@@ -299,7 +349,11 @@ class TaskController extends Controller
         $task->submit_date = date('Y-m-d h:i:s');
         $task->status = 'Pending Verification';
         $task->save();
-
+        $newl = new TaskHistory;
+        $newl->task_id = $req->task_id;
+        $newl->user_id = backpack_user()->id;
+        $newl->description = "Assignee request to verify completion";
+        $newl->save();
 
 
         return redirect(route('task.showpending', [], false))->with([
@@ -448,7 +502,11 @@ class TaskController extends Controller
 
         $task->save();
 
-
+        $newl = new TaskHistory;
+        $newl->task_id = $req->id;
+        $newl->user_id = backpack_user()->id;
+        $newl->description = "Task has been completed";
+        $newl->save();
 
         return redirect(route('task.showlist', [], false))->with([
                   'feedback' => true,
@@ -465,7 +523,7 @@ class TaskController extends Controller
         $user = $appsli->user;
 
         $thetask->status = "In Progress";
-        $task->accepted_date = date('Y-m-d h:i:s');
+        $thetask->accepted_date = date('Y-m-d h:i:s');
         $thetask->assign_id = $user->id;
         $user->task_accept = $user->task_accept + 1;
         $user->save();

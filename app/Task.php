@@ -38,8 +38,12 @@ class Task extends Model
     {
         return $this->hasMany(TaskInteraction::class, 'task_id');
     }
+    public function log()
+    {
+        return $this->hasMany(TaskHistory::class, 'task_id');
+    }
 
-    
+
     public function applicant()
     {
         return $this->hasMany(TaskAdsApplication::class,'task_id');
