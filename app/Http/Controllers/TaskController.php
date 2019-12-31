@@ -150,14 +150,16 @@ class TaskController extends Controller
     }
 
     public function submitTaskRequest(Request $req){
-        // if($req->inputtype=="advert"){
+        // if($req->inputtype=="advert"){   
         if($req->inputid==null){
             $new = new Task;
+            $new->reference_no = $req->session()->get('draft')[0];
         }else{
             $new = Task::find($req->inputid);
+            $new->reference_no = $req->inputref;    
         }
         // dd($req->session()->get('draft'));
-        $new->reference_no = $req->session()->get('draft')[0];
+        // dd($req->inputdescription);
         $new->name = $req->inputname;
         $new->descr = $req->inputdescription;
         $new->user_id = backpack_user()->id;
@@ -174,6 +176,7 @@ class TaskController extends Controller
             ]);
         }else{
             $new->status = "Advertised";
+            $new->assign_id = null;
             $new->save();
             return redirect(route('task.showlist',[],false))->with([
                 'feedback' => true,
