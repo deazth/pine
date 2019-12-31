@@ -6,6 +6,7 @@ use App\Task;
 use App\Models\Skill;
 use App\Models\SkillCat;
 use App\User;
+use App\TaskAdsApplication;
 use Session;
 use Illuminate\Http\Request;
 
@@ -86,14 +87,14 @@ class TaskController extends Controller
     {
         //
     }
-    
+
     public function showTaskList(Request $req)
     {
         $task = Task::where('user_id', backpack_user()->id)->orderBy('created_at')->get();
         return view('task_list', ['task' => $task]);
 
     }
-    
+
     public function showTaskPending(Request $req)
     {
         $assign = Task::where('assign_id', backpack_user()->id)->orderBy('created_at')->get();
@@ -105,6 +106,12 @@ class TaskController extends Controller
     {
         $task = Task::where('user_id', backpack_user()->id)->orderBy('created_at')->get();
         return view('task_list', ['task' => $task]);
+    }
+
+    public function showTaskOpen(Request $req)
+    {
+        $task = Task::where('status', 'Advertised')->orderBy('created_at')->get();
+        return view('task_advert', ['task' => $task]);
     }
 
     public function showTaskRequest(Request $req){
@@ -183,5 +190,40 @@ class TaskController extends Controller
         }
     }
 
-    
+    public function applyForAds(Request $req){
+      $dattask = Task::find($req->inputid);
+
+      if($dattask){
+
+        if($dattask->iHaveApplied(backpack_user()->id)){
+          return redirect()->back()->with([
+              'feedback' => true,
+              'feedback_text' => "You have already applied for this Ads",
+              'feedback_type' => "warning"
+          ]);
+        }
+
+
+        $nuapply = new TaskAdsApplication;
+        $nuapply->user_id = backpack_user()->id;
+        $nuapply->task_id = $dattask->id;
+        $nuapply->save();
+
+        return redirect()->back()->with([
+            'feedback' => true,
+            'feedback_text' => "Application submitted to requestor",
+            'feedback_type' => "success"
+        ]);
+
+      } else {
+        return redirect()->back()->with([
+            'feedback' => true,
+            'feedback_text' => "Selected Advertisement no longer available",
+            'feedback_type' => "warning"
+        ]);
+      }
+
+    }
+
+
 }
