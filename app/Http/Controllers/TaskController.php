@@ -86,14 +86,14 @@ class TaskController extends Controller
     {
         //
     }
-    
+
     public function showTaskList(Request $req)
     {
         $task = Task::where('user_id', backpack_user()->id)->orderBy('created_at')->get();
         return view('task_list', ['task' => $task]);
 
     }
-    
+
     public function showTaskPending(Request $req)
     {
         $assign = Task::where('assign_id', backpack_user()->id)->orderBy('created_at')->get();
@@ -150,13 +150,13 @@ class TaskController extends Controller
     }
 
     public function submitTaskRequest(Request $req){
-        // if($req->inputtype=="advert"){   
+        // if($req->inputtype=="advert"){
         if($req->inputid==null){
             $new = new Task;
             $new->reference_no = $req->session()->get('draft')[0];
         }else{
             $new = Task::find($req->inputid);
-            $new->reference_no = $req->inputref;    
+            $new->reference_no = $req->inputref;
         }
         // dd($req->session()->get('draft'));
         // dd($req->inputdescription);
@@ -186,5 +186,18 @@ class TaskController extends Controller
         }
     }
 
-    
+
+
+
+
+    public function assigneeComplete(Request $req)
+    {
+        $task = Task::find($req->task_id);
+        
+
+        dd($req->task_id);
+
+    }
+
+
 }

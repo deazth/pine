@@ -33,8 +33,8 @@
                                 <div class="mt-2 col-lg-12"></div>
                                 <div class="col-lg-2">Created Date:</div>
                                 <div class="col-lg-10">
-                                    @if($task ?? '') 
-                                        {{$task->created_at}} 
+                                    @if($task ?? '')
+                                        {{$task->created_at}}
                                     @endif
                                 </div>
                                 <div class="mt-2 col-lg-12"></div>
@@ -55,7 +55,7 @@
                                         {{ucfirst($draft[2])}} - {{ucfirst($draft[3])}}
                                     @endif
                                 </div>
-                                    @if($task ?? '') 
+                                    @if($task ?? '')
                                         @if(($task->status!="Open")&&($task->status!="Advertised"))
                                         <div class="mt-2 col-lg-12"></div>
                                         <div class="col-lg-2">Assigned to:</div>
@@ -69,7 +69,7 @@
                                 <div class="col-lg-2">Title:</div>
                                 <div class="col-lg-10">
                                     <input class="form-control" type="text" id="inputname" name="inputname" placeholder="Insert Title"
-                                    @if($task ?? '') 
+                                    @if($task ?? '')
                                         value="{{$task->name}}" readonly
                                     @endif
                                     required>
@@ -80,8 +80,8 @@
                                     <textarea class="form-control" type="text" id="inputdescription" name="inputdescription" @if($task ?? '') @if($task->status!="Open") disabled @endif @endif rows="5" required placeholder="Insert Description">@if($task ?? ''){{$task->descr}}@endif</textarea>
                                 </div>
                                 <div class="mt-2 col-lg-12"></div>
-                                <div class="col-lg-2">Skill Category:</div> 
-                                @if($task ?? '') 
+                                <div class="col-lg-2">Skill Category:</div>
+                                @if($task ?? '')
                                         @if($task->status!="Open")
                                         <input class="form-control" type="text" hidden name="inputskillcat" value="{{$task->skill_cat_id}}" required>
                                         @endif
@@ -111,7 +111,7 @@
                                 <div class="col-lg-4"></div>
                                 <div class="mt-2 col-lg-12"></div>
                                 <div class="col-lg-2">Skill:</div>
-                                    @if($task ?? '') 
+                                    @if($task ?? '')
                                         @if($task->status!="Open")
                                         <input class="form-control" type="text" hidden name="inputskill" value="{{$task->skill_id}}" required>
                                         @endif
@@ -147,10 +147,10 @@
                             @if(($task->status=="Open")||($task->status=="Proposed")||($task->status=="Advertised"))
                                 <button type="submit" class="btn btn-primary">Advertise Task</button>
                                 @if(($task->status=="Open")||($task->status=="Advertised"))
-                                <button id="assign" type="button" class="btn btn-success" 
+                                <button id="assign" type="button" class="btn btn-success"
                                 data-toggle="modal" data-target="#ass">Propose Assignee</button>
                                 @elseif($task->status=="Proposed")
-                                <button id="assign" type="button" class="btn btn-success" 
+                                <button id="assign" type="button" class="btn btn-success"
                                 data-toggle="modal" data-target="#ass">Propose to other Assignee</button>
                                 @endif
                             @elseif($task->status=="Request to Cancel")
@@ -164,7 +164,7 @@
                             <a href="" onClick="confirm('Accept this task?')"><button type="button" class="btn btn-success">Accept</button></a>
                             @elseif($task->status=="In Progress")
                             <a href="" onClick="confirm('Request to cancel this task?')"><button type="button" class="btn btn-danger">Request Cancellation</button></a>
-                            <a href="" onClick="confirm('Mark this task as completed?')"><button type="button" class="btn btn-success">Task Completed</button></a>
+                            <a href="{{route('task.assigneeComplete',['task_id'=>$task->id ],false) }}" onClick="confirm('Mark this task as completed?')"><button type="button" class="btn btn-success" onclick="assigneeAction($task->id)">Task Completed</button></a>
                             <a href="" onClick="confirm('Extend this task as a requester to another assignee?')"><button type="button" class="btn btn-warning">Task Extend</button></a>
                             @endif
                         @endif
@@ -178,6 +178,8 @@
         </div>
     </div>
 </div>
+
+
 
 
 <!-- Task Parent -->
@@ -261,6 +263,17 @@
         $("#form").submit();
 
     });
+
+
+    function assigneeAction(taskid, act){
+
+
+//confirm('Mark this task as completed?
+    		$('#task_id').val(taskid);
+        $('#act_val').val(act);
+    		$('#formAssigneeAction').submit();
+
+      };
 </script>
 @stop
 
