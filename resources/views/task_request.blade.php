@@ -19,7 +19,7 @@
                 @elseif($draft ?? '')
                     @if($draft[4]!="")
                     <input class="form-control" type="text" hidden name="inputparentid" value="{{$draft[4]}}" required>
-                    
+
                     @endif
                 @endif
                 <input class="form-control d-none" type="text" hidden id="inputassignid" name="inputassignid">
@@ -169,10 +169,27 @@
                                   @elseif($task->status=="Pending Verification")
                                       <div class="mb-4 text-info">The assignee has marked this task as completed</div>
                                       <a href="{{route('task.requesterReject',['task_id'=>$task->id ],false) }}" onClick="confirm('Mark incomplete and return to assignee?')"><button type="button" class="btn btn-danger">Reject</button></a>
-                                      <a href="{{route('task.cancellationapprove')}}" onClick="confirm('Approve assignee request to cancel?')"><button type="button" class="btn btn-success">Approve</button>
+
+                                        <button id="btnapprove" type="button" class="btn btn-info"
+                              						title="Edit" data-toggle="modal" data-target="#reqRateForm"
+                              						data-id="{{$task->id}}">Approve</button>
 
                             <!---- resquester action  end--->
+
+
+
+
+
+
+
                             @endif
+
+
+
+
+
+
+
                         @elseif($task->assign_id==$user)
                             @if($task->status=="Proposed")
                             <a href="{{route('task.proposedreject',['task_id'=>$task->id ],false)}}" onClick="return confirm('Reject this task?')"><button type="button" class="btn btn-danger">Decline</button></a>
@@ -186,6 +203,23 @@
                             @endif
                         @endif
                     @endif
+
+
+                    <!---- assignee rate action --->
+                       @if(($task->status=="Completed") )
+
+                           <div class="mb-4 text-info">Hooray Jobs completed and requester has rate you {{$task->rating_assign}}</div>
+
+
+                             <button id="btnassigneerate" type="button" class="btn btn-info"
+                               title="Edit" data-toggle="modal" data-target="#assRateForm"
+                               data-id="{{$task->id}}">Rate Requester</button>
+
+                                   @endif
+
+                  <!---- assignee rate action--->
+
+
                     @if($draft ?? '')
                         <button type="submit" class="btn btn-primary">Advertise Task</button>
                         <button id="assign" type="button" class="btn btn-success" data-toggle="modal" data-target="#ass">Propose Assignee</button>
@@ -217,7 +251,7 @@
                                 </a></td>
                                 <td>{{$draft[6]}}</td>
                                 <td>{{$draft[7]}}</td>
-                            </tr> 
+                            </tr>
                         </tbody>
                     </table>
                 </div>
@@ -248,7 +282,7 @@
                                 </a></td>
                                 <td>{{$task->parent->name}}</td>
                                 <td>{{$task->parent->created_at}}</td>
-                            </tr> 
+                            </tr>
                         </tbody>
                     </table>
                 </div>
@@ -277,7 +311,7 @@
                                 </a></td>
                                 <td>{{$single->name}}</td>
                                 <td>{{$single->created_at}}</td>
-                            </tr> 
+                            </tr>
                             @endforeach
                         </tbody>
                     </table>
@@ -388,6 +422,105 @@
     </div>
 </div>
 
+
+
+
+<div class="modal fade" id="reqRateForm" tabindex="-1" role="dialog"
+	aria-hidden="true">
+	<div class="modal-dialog" role="document">
+		<div class="modal-content">
+
+
+				<div class="modal-header">We are glad the job are finish. </div>
+				<form method="POST" action="{{route('task.requesterRate')}}">
+					@csrf
+					<div class="modal-body">
+
+						<div class="form-group row">
+
+							<input class="form-control col-sm-3" id="task_id_rate"
+								name="id" type="hidden" >
+						</div>
+Please rate: 1 <input type="radio" value="1" name="rating_asign" selected/>
+            2<input type="radio" value="2" name="rating_assign"/>
+            3<input type="radio" value="3" name="rating_assign"/>
+            4<input type="radio" value="4" name="rating_assign"/>
+            5<input type="radio" value="5" name="rating_assign"/>
+
+            <select name="success_rating_assign" class="form-control">
+              <option value="1">Service Excellence</option>
+              <option value="2">Unity and Teamwork</option>
+              <option value="3">Cultivates stakeholders Collaboration</option>
+              <option value="4">Catalyzes Change</option>
+              <option value="5">Embraces & Nurtures Talent Mindset</option>
+              <option value="6">Strives for Results</option>
+              <option value="7">Strategic & Entrepreneurial Mindset</option>
+
+            </select>
+					</div>
+					<div class="modal-footer">
+						<button type="button" class="btn btn-secondary"
+							data-dismiss="modal">Close</button>
+						<button type="submit" class="btn btn-primary">Save changes</button>
+					</div>
+				</form>
+
+		</div>
+	</div>
+</div>
+
+
+
+
+
+<div class="modal fade" id="assRateForm" tabindex="-1" role="dialog"
+	aria-hidden="true">
+	<div class="modal-dialog" role="document">
+		<div class="modal-content">
+
+
+				<div class="modal-header">Rate the requester</div>
+				<form method="POST" action="{{route('task.assigneeRate')}}">
+					@csrf
+					<div class="modal-body">
+
+						<div class="form-group row">
+
+							<input class="form-control col-sm-3" id="task_id_rate"
+								name="id" type="hidden" >
+						</div>
+Please rate: 1 <input type="radio" value="1" selected name="rating_user"/>
+            2<input type="radio" value="2" name="rating_user"/>
+            3<input type="radio" value="3" name="rating_user"/>
+            4<input type="radio" value="4" name="rating_user"/>
+            5<input type="radio" value="5" name="rating_user"/>
+
+            <select name="success_rating_user" class="form-control">
+              <option value="1">Service Excellence</option>
+              <option value="2">Unity and Teamwork</option>
+              <option value="3">Cultivates stakeholders Collaboration</option>
+              <option value="4">Catalyzes Change</option>
+              <option value="5">Embraces & Nurtures Talent Mindset</option>
+              <option value="6">Strives for Results</option>
+              <option value="7">Strategic & Entrepreneurial Mindset</option>
+
+            </select>
+					</div>
+					<div class="modal-footer">
+						<button type="button" class="btn btn-secondary"
+							data-dismiss="modal">Close</button>
+						<button type="submit" class="btn btn-primary">Save changes</button>
+					</div>
+				</form>
+
+		</div>
+	</div>
+</div>
+
+
+
+
+
 @section('after_scripts')
 <script type="text/javascript">
     $("#inputskillcat").on('change', function(){
@@ -445,6 +578,30 @@
     		$('#formAssigneeAction').submit();
 
       };
+
+      $('#reqRateForm').on('show.bs.modal', function(e) {
+          //get data-id attribute of the clicked element
+          var id = $(e.relatedTarget).data('id');
+
+
+          //populate the textbox
+        //  $(e.currentTarget).find('task_id_rate').val(id);
+  $(e.currentTarget).find('input[name="id"]').val(id);
+
+      });
+
+      $('#assRateForm').on('show.bs.modal', function(e) {
+          //get data-id attribute of the clicked element
+          var id = $(e.relatedTarget).data('id');
+
+
+          //populate the textbox
+        //  $(e.currentTarget).find('task_id_rate').val(id);
+  $(e.currentTarget).find('input[name="id"]').val(id);
+
+      });
+
+
 </script>
 @stop
 
