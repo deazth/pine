@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use App\Task;
 use App\TaskInteraction;
+use App\TaskHistory;
 use App\Models\Skill;
 use App\Models\SkillCat;
 use App\User;
@@ -121,7 +122,11 @@ class TaskController extends Controller
         $assignee = User::all();
         // dd($req);
         if ($req->session()->get('task')!=null) {
-            // $task = $req->session()->get('task');
+            $taskm = TaskInteraction::where('user_id','!=',backpack_user()->id)->where('id', $req->session()->get('task')[0])->get();
+            foreach($taskm as $s){
+                $s->read = X;
+                $s->save();
+            }
             $task = Task::where('id', $req->session()->get('task')[0])->first();
             $skill = Skill::where('skill_cat_id', $req->session()->get('task')[1])->get();
             return view('task_request', ['assignee' => $assignee, 'task' => $task, 'skillcat' => $skillcat, 'skill' => $skill, 'user' => backpack_user()->id]);
@@ -250,6 +255,25 @@ class TaskController extends Controller
             $new->assign_id = $req->inputassignid;
             $new->status = "Proposed";
             $new->save();
+            $newl = new TaskHistory;
+            if ($req->inputid==null) {
+                $newl->task_id = $new->id;
+            }else{
+                $newl->task_id = $inputid;
+            }
+            $newl->user_id = backpack_user()->id;
+            $newl->description = "Created new task request";
+            $newl->save();
+            $newl = new TaskHistory;
+            if ($req->inputid==null) {
+                $newl->task_id = $new->id;
+            }else{
+                $newl->task_id = $inputid;
+            }
+            $newl->user_id = backpack_user()->id;
+            $assid = User::find($req->inputassignid);
+            $newl->description = "Assigned task to ".$assid->staff_no."-".$assid->name;
+            $newl->save();
             return redirect(route('task.showlist', [], false))->with([
                 'feedback' => true,
                 'feedback_text' => "Successfully assigned new task request!",
@@ -259,6 +283,24 @@ class TaskController extends Controller
             $new->status = "Advertised";
             $new->assign_id = null;
             $new->save();
+            $newl = new TaskHistory;
+            if ($req->inputid==null) {
+                $newl->task_id = $new->id;
+            }else{
+                $newl->task_id = $inputid;
+            }
+            $newl->user_id = backpack_user()->id;
+            $newl->description = "Created new task request";
+            $newl->save();
+            $newl = new TaskHistory;
+            if ($req->inputid==null) {
+                $newl->task_id = $new->id;
+            }else{
+                $newl->task_id = $inputid;
+            }
+            $newl->user_id = backpack_user()->id;
+            $newl->description = "Advertised task";
+            $newl->save();
             return redirect(route('task.showlist', [], false))->with([
                 'feedback' => true,
                 'feedback_text' => "Successfully advertised new task request!",

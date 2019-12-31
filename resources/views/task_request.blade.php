@@ -200,24 +200,23 @@
                             <a href="{{route('task.assigneeCancel',['task_id'=>$task->id ],false) }}" onClick="return confirm('Request to cancel this task?')"><button type="button" class="btn btn-danger">Request Cancellation</button></a>
                             <a href="{{route('task.assigneeComplete',['task_id'=>$task->id ],false) }}" onClick="return confirm('Mark this task as completed?')"><button type="button" class="btn btn-success" onclick="assigneeAction($task->id)">Task Completed</button></a>
                             <a href="{{route('task.assigneeExtend',['task_id'=>$task->id ],false) }}" onClick="confirm('Extend this task as a requester to another assignee?')"><button type="button" class="btn btn-primary">Extend</button></a>
-                            @endif
+                            @elseif(($task->status=="Completed")&&($task->name==null))
+
+                            <div class="mb-4 text-info">Hooray Jobs completed and requester has rate you {{$task->rating_assign}}</div>
+
+
+                            <button id="btnassigneerate" type="button" class="btn btn-info"
+                                title="Edit" data-toggle="modal" data-target="#assRateForm"
+                                data-id="{{$task->id}}">Rate Requester</button>
+
+        @endif
+
+<!---- assignee rate action--->
                         @endif
                     @endif
 
 
-                    <!---- assignee rate action --->
-                       @if(($task->status=="Completed") )
-
-                           <div class="mb-4 text-info">Hooray Jobs completed and requester has rate you {{$task->rating_assign}}</div>
-
-
-                             <button id="btnassigneerate" type="button" class="btn btn-info"
-                               title="Edit" data-toggle="modal" data-target="#assRateForm"
-                               data-id="{{$task->id}}">Rate Requester</button>
-
-                                   @endif
-
-                  <!---- assignee rate action--->
+                    
 
 
                     @if($draft ?? '')
@@ -355,7 +354,7 @@
                                 @php($previous = $single->user_id)
                             @endforeach
                         @endif
-                        @if(($task->status!="Open")&&($task->status!="Advertised")&&($task->status!="Proposed"))
+                        @if(($task->status!="Open")&&($task->status!="Advertised")&&($task->status!="Proposed")&&($task->status!="Completed"))
                                 <form action="{{route('task.submitmsg')}}" method="POST">
                                     @csrf
                                     <input class="form-control" type="text" hidden name="inputid" value="{{$task->id}}" required>
@@ -441,11 +440,11 @@
 							<input class="form-control col-sm-3" id="task_id_rate"
 								name="id" type="hidden" >
 						</div>
-Please rate: 1 <input type="radio" value="1" name="rating_asign" selected/>
-            2<input type="radio" value="2" name="rating_assign"/>
-            3<input type="radio" value="3" name="rating_assign"/>
-            4<input type="radio" value="4" name="rating_assign"/>
-            5<input type="radio" value="5" name="rating_assign"/>
+Please rate: 1 <input type="radio" value="1" name="rating_assign" checked>
+            2<input type="radio" value="2" name="rating_assign">
+            3<input type="radio" value="3" name="rating_assign">
+            4<input type="radio" value="4" name="rating_assign">
+            5<input type="radio" value="5" name="rating_assign">
 
             <select name="success_rating_assign" class="form-control">
               <option value="1">Service Excellence</option>
