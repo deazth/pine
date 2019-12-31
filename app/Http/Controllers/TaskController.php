@@ -308,8 +308,8 @@ public function assigneeComplete(Request $req)
 
         return redirect(route('task.showpending',[],false))->with([
             'feedback' => true,
-            'feedback_text' => "The task has been cancelled and redirected to requestor!!",
-            'feedback_type' => "danger"
+            'feedback_text' => "The task has been cancelled and redirected to requester!!",
+            'feedback_type' => "success"
         ]);
       }
 
