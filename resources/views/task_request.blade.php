@@ -218,7 +218,7 @@
                     @endif
 
 
-                    
+
 
 
                     @if($draft ?? '')
@@ -277,6 +277,7 @@
                             <th>Staff Name</th>
                             <th>Have requested Skil</th>
                             <th>Staff Rating</th>
+                            <th>Action</th>
                         </tr>
                     </thead>
                     <tbody>
@@ -291,6 +292,13 @@
                               @endif
                             </td>
                             <td>{{$single->user->total_do_count == 0 ? 0 : $single->user->total_do_rating / $single->user->total_do_count }}</td>
+                            <td>
+                              <form action="{{route('task.choosapply')}}" method="post">
+                                <input type="hidden" name="trid" value="{{ $single->id }}" />
+                                @csrf
+                                <button type="submit" class="btn btn-success">Choose</button>
+                              </form>
+                            </td>
                         </tr>
                         @endforeach
                     </tbody>
@@ -423,7 +431,7 @@
                                         <tbody>
                                             @foreach($task->log as $single)
                                             <tr>
-                
+
                                                 <td>{{$single->description}}</td>
                                                 <td>{{$single->created_at}}</td>
                                             </tr>
@@ -436,7 +444,7 @@
                         </div>
                 </div>
                 </div>
-                
+
         </div>
 
 @endif
@@ -572,7 +580,13 @@ Please rate: 1 <input type="radio" value="1" selected name="rating_user"/>
 
 
 
+@section('after_styles')
+  <!-- DATA TABLES -->
+  <link rel="stylesheet" type="text/css" href="{{ asset('packages/datatables.net-bs4/css/dataTables.bootstrap4.min.css') }}">
+  <link rel="stylesheet" type="text/css" href="{{ asset('packages/datatables.net-fixedheader-bs4/css/fixedHeader.bootstrap4.min.css') }}">
+  <link rel="stylesheet" type="text/css" href="{{ asset('packages/datatables.net-responsive-bs4/css/responsive.bootstrap4.min.css') }}">
 
+@endsection
 
 @section('after_scripts')
 <script type="text/javascript" src="{{ asset('packages/datatables.net/js/jquery.dataTables.min.js') }}"></script>
