@@ -120,7 +120,7 @@ class TaskController extends Controller
     }
 
     public function showTaskRequestNew(Request $req){
-        $draft = array(date("Ymd")."-".sprintf("%08d", backpack_user()->id)."-".rand(10000,99999), "Draft");
+        $draft = array(date("Ymd")."-".sprintf("%08d", backpack_user()->id)."-".rand(10000,99999), "Draft", backpack_user()->staff_no, backpack_user()->name);
         Session::put(['task' => [], 'draft' => $draft]);
         return redirect(route('task.showrequest',[],false));
     }

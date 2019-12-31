@@ -26,6 +26,8 @@ class CreateTasksTable extends Migration
             $table->integer('skill_cat_id');
             $table->integer('rating_user')->nullable();
             $table->integer('rating_assign')->nullable();
+            $table->string('success_rating_user')->nullable();
+            $table->string('success_rating_assign')->nullable();
             $table->date('submit_date')->nullable();
             $table->date('complete_date')->nullable();
             $table->timestamps();

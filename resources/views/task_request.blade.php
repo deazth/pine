@@ -39,6 +39,25 @@
                                     @endif
                                 </div>
                                 <div class="mt-2 col-lg-12"></div>
+                                <div class="col-lg-2">Requested by:</div>
+                                <div class="col-lg-10">
+                                    @if($task ?? '') 
+                                        {{ucfirst($task->user->staff_no)}} - {{ucfirst($task->user->name)}} 
+                                    @elseif($draft ?? '') 
+                                        {{ucfirst($draft[2])}} - {{ucfirst($draft[3])}} 
+                                    @endif
+                                </div>
+                                    @if($task ?? '') 
+                                        @if(($task->status!="Open")||($task->status!="Advertised"))
+                                        <div class="mt-2 col-lg-12"></div>
+                                        <div class="col-lg-2">Assigned to:</div>
+                                        <div class="col-lg-10">
+                                                    {{ucfirst($task->assign->staff_no)}} - {{ucfirst($task->assign->name)}} 
+                                                
+                                        </div>
+                                    @endif
+                                @endif
+                                <div class="mt-2 col-lg-12"></div>
                                 <div class="col-lg-2">Title:</div>
                                 <div class="col-lg-10">
                                     <input class="form-control" type="text" id="inputname" name="inputname" 
@@ -113,8 +132,18 @@
                 </div>
                 <div class="mt-5 col-lg-12"></div>
                 <div class="text-center">
-                    <button type="submit" class="btn btn-primary">Advertise Task</button>
-                    <button id="assign" type="button" class="btn btn-success" data-toggle="modal" data-target="#ass">Propose Assignee</button>
+                    @if($task ?? '')
+                        @if($task->status=="Open")
+                            <button type="submit" class="btn btn-primary">Advertise Task</button>
+                        @endif
+                        @if($task->status=="Open")
+                            <button id="assign" type="button" class="btn btn-success" data-toggle="modal" data-target="#ass">Propose Assignee</button>
+                        @endif
+                    @endif
+                    @if($draft ?? '')
+                        <button type="submit" class="btn btn-primary">Advertise Task</button>
+                        <button id="assign" type="button" class="btn btn-success" data-toggle="modal" data-target="#ass">Propose Assignee</button>
+                    @endif
                 </div>
             </form>
         </div>
