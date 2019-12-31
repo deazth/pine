@@ -150,19 +150,16 @@ class TaskController extends Controller
     }
 
     public function submitTaskRequest(Request $req){
-        // if($req->inputtype=="advert"){   
         if($req->inputid==null){
             $new = new Task;
             $new->reference_no = $req->session()->get('draft')[0];
+            $new->user_id = backpack_user()->id;
         }else{
             $new = Task::find($req->inputid);
-            $new->reference_no = $req->inputref;    
+            $new->reference_no = $req->inputref;   
         }
-        // dd($req->session()->get('draft'));
-        // dd($req->inputdescription);
         $new->name = $req->inputname;
         $new->descr = $req->inputdescription;
-        $new->user_id = backpack_user()->id;
         $new->skill_id = $req->inputskill;
         $new->skill_cat_id = $req->inputskillcat;
         if($req->inputassignid!=null){

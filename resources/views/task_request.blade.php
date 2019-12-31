@@ -30,13 +30,14 @@
                                         {{$draft[0]}}
                                     @endif
                                 </div>
+                                @if($task ?? '') 
                                 <div class="mt-2 col-lg-12"></div>
                                 <div class="col-lg-2">Created Date:</div>
                                 <div class="col-lg-10">
-                                    @if($task ?? '') 
-                                        {{$task->created_at}} 
-                                    @endif
+                                        {{$task->created_at}}
                                 </div>
+                                 
+                                @endif
                                 <div class="mt-2 col-lg-12"></div>
                                 <div class="col-lg-2">Status:</div>
                                 <div class="col-lg-10">
@@ -63,8 +64,8 @@
                                                     {{ucfirst($task->assign->staff_no)}} - {{ucfirst($task->assign->name)}}
 
                                         </div>
+                                        @endif
                                     @endif
-                                @endif
                                 <div class="mt-2 col-lg-12"></div>
                                 <div class="col-lg-2">Title:</div>
                                 <div class="col-lg-10">
@@ -81,7 +82,7 @@
                                 </div>
                                 <div class="mt-2 col-lg-12"></div>
                                 <div class="col-lg-2">Skill Category:</div> 
-                                @if($task ?? '') 
+                                    @if($task ?? '') 
                                         @if($task->status!="Open")
                                         <input class="form-control" type="text" hidden name="inputskillcat" value="{{$task->skill_cat_id}}" required>
                                         @endif
@@ -141,7 +142,7 @@
                     </div>
                 </div>
                 <div class="mt-5 col-lg-12"></div>
-                <div class="text-center">
+                <div class="text-center">   
                     @if($task ?? '')
                         @if($task->user_id==$user)
                             @if(($task->status=="Open")||($task->status=="Proposed")||($task->status=="Advertised"))
@@ -155,13 +156,15 @@
                                 @endif
                             @elseif($task->status=="Request to Cancel")
                                 <div class="mb-4 text-danger">The assignee has requested to cancel his progress</div>
-                                <a href="" onClick="confirm('Reject assignee request to cancel?')"><button type="button" class="btn btn-danger">Reject</button></a>
-                                <a href="" onClick="confirm('Approve assignee request to cancel?')"><button type="button" class="btn btn-success">Approve</button>
+                                <a href="{{route('task.cancellationreject')}}" onClick="confirm('Reject assignee request to cancel?')"><button type="button" class="btn btn-danger">Reject</button></a>
+                                <a href="{{route('task.cancellationapprove')}}" onClick="confirm('Approve assignee request to cancel?')"><button type="button" class="btn btn-success">Approve</button>
                             @endif
                         @elseif($task->assign_id==$user)
                             @if($task->status=="Proposed")
-                            <a href="" onClick="confirm('Reject this task?')"><button type="button" class="btn btn-danger">Reject</button></a>
-                            <a href="" onClick="confirm('Accept this task?')"><button type="button" class="btn btn-success">Accept</button></a>
+                            <a href="{{route('task.proposedreject')}}" onClick="confirm('Reject this task?')"><button type="button" class="btn btn-danger">Reject</button></a>
+                            <a href="{{route('task.proposedaccept')}}" onClick="confirm('Accept this task?')"><button type="button" class="btn btn-success">Accept</button></a>
+                            <button id="assign" type="button" class="btn btn-primary" 
+                                data-toggle="modal" data-target="#ass">Propose to other Assignee</button>
                             @elseif($task->status=="In Progress")
                             <a href="" onClick="confirm('Request to cancel this task?')"><button type="button" class="btn btn-danger">Request Cancellation</button></a>
                             <a href="" onClick="confirm('Mark this task as completed?')"><button type="button" class="btn btn-success">Task Completed</button></a>
@@ -201,12 +204,18 @@
                 <select class="form-control" id="inputassignee" name="inputassignee">
                     <option hidden disabled value="" selected>Select Assignee</option>
                     @foreach($assignee as $single)
-                        @if($single->id!=$user)
-                            <option value="{{$single->id}}"> {{ucfirst("$single->staff_no ")}} - {{ucfirst("$single->name ")}}</option>
+                        @if($task ?? '')
+                            @if(($single->id!=$user)&&($single->id!=$task->user_id))
+                                <option value="{{$single->id}}"> {{ucfirst("$single->staff_no ")}} - {{ucfirst("$single->name ")}}</option>
+                            @endif
+                        @else
+                            @if($single->id!=$user)
+                                <option value="{{$single->id}}"> {{ucfirst("$single->staff_no ")}} - {{ucfirst("$single->name ")}}</option>
+                            @endif
                         @endif
                     @endforeach
                 </select>
-                <button id="assignassignee" class="mt-4 btn btn-primary">Propose Assignee</button>
+                <button id="assignassignee" class="mt-4 btn btn-success">Propose Assignee</button>
             </div>
             <div class="modal-footer">
                 <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
