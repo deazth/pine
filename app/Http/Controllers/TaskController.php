@@ -110,7 +110,9 @@ class TaskController extends Controller
 
     public function showTaskOpen(Request $req)
     {
-        $task = Task::where('status', 'Advertised')->orderBy('created_at')->get();
+        $task = Task::where('status', 'Advertised')
+          ->where('user_id', '!=', backpack_user()->id)
+          ->orderBy('created_at')->get();
         return view('task_advert', ['task' => $task]);
     }
 
@@ -331,4 +333,36 @@ public function assigneeComplete(Request $req)
       }
 
 
+
+
+      public function requesterVerify(Request $req)
+      {
+          $task = Task::find($req->task_id);
+          $task->status = 'Request to Cancel';
+          $task->save();
+
+
+
+          return redirect(route('task.showpending',[],false))->with([
+              'feedback' => true,
+              'feedback_text' => "The task has been cancelled and redirected to requestor!!",
+              'feedback_type' => "danger"
+          ]);
+        }
+
+
+        public function requesterReject(Request $req)
+        {
+            $task = Task::find($req->task_id);
+            $task->status = 'In Progress';
+            $task->save();
+
+
+
+            return redirect(route('task.showlist',[],false))->with([
+                'feedback' => true,
+                'feedback_text' => "The task has been marked incomplete and resend to assignee",
+                'feedback_type' => "warning"
+            ]);
+          }
 }
