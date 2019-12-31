@@ -55,6 +55,7 @@ Route::group(['middleware' => ['admin']], function () {
   Route::get( '/user/skill/create','UserSkillController@create')->name('userskill.create');
   Route::post( '/user/skill/store','UserSkillController@store')->name('userskill.store');
   Route::post( '/user/skill/destroy','UserSkillController@destroy')->name('userskill.destroy');
+  Route::get( '/skill/find','UserSkillController@find')->name('userskill.find');
 });
 
 // so-called API

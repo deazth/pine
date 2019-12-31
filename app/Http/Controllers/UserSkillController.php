@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use App\UserSkill;
 use App\Models\SkillCat;
+use App\Models\Skill;
 
 use Illuminate\Http\Request;
 
@@ -120,5 +121,23 @@ else{
       } else {
         return redirect(route('userskill.index', [], false))->with([]);
       }
+    }
+
+    public function find(Request $req){
+      $skillcat = SkillCat::all();
+
+      if($req->filled('inputskill')){
+
+        $theskill = Skill::find($req->inputskill);
+
+        $uslist = UserSkill::where('skill_id', $req->inputskill)->get();
+
+        return view('userSkill.searchuser', ['skillcat' => $skillcat, 'sresult' => $uslist
+          , 'skillname' => $theskill->name
+        ]);
+      }
+
+      return view('userSkill.searchuser', ['skillcat' => $skillcat]);
+
     }
 }

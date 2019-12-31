@@ -63,7 +63,7 @@ class Controller extends BaseController
 
         // 4. task completed. pending staff to rate requestor
         $reass = \App\Task::where('assign_id', backpack_user()->id)
-          ->where('status', 'Completed')->whereNull('rating_user')->get();
+          ->where('status', 'Complete')->whereNull('rating_user')->get();
 
         foreach($reass as $ous){
           array_push($notiarr, [

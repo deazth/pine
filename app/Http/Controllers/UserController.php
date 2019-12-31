@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use Illuminate\Http\Request;
 use GuzzleHttp\Client;
 use App\Charts\CartaGeraf;
+use \Calendar;
 use App\User;
 use App\Task;
 
@@ -181,4 +182,41 @@ class UserController extends Controller
     $response->header('Content-Type', 'image/jpeg'); // change this to the download content type.
     return $response;
   }
+
+  public function taskHistoryCal(Request $req){
+
+    if($req->filled('staff_no')){
+      $staffno = $req->staff_no;
+    } else {
+      $staffno = backpack_user()->staff_no;
+    }
+
+    $counter = 0;
+    $evlist = [];
+
+    $st = User::where('staff_no', $staffno)->first();
+    if($st){
+      $tasklist = Task::where('assign_id', $st->id)
+        ->where('status', 'Complete')->whereNotNull('rating_user')->get();
+
+      foreach ($tasklist as $value) {
+        Calendar::event(
+            $value->name,
+            false,
+            new \DateTime($value->accepted_date),
+            new \DateTime($value->submit_date),
+            $value->id,[
+              'url' => route('task.viewrequest', ['inputid' => $value->id]),
+              'color' => $this->$borderColors[$counter%0]
+            ]
+          );
+        $counter++;
+      }
+    }
+
+    $cds = Calendar::addEvents($evlist);
+    $this->addVar('cds', $cds);
+    return view('user_calendar', $this->data);
+  }
+
 }
