@@ -124,6 +124,11 @@ class TaskController extends Controller
             // $task = $req->session()->get('task');
             $task = Task::where('id', $req->session()->get('task')[0])->first();
             $skill = Skill::where('skill_cat_id', $req->session()->get('task')[1])->get();
+
+            // foreach($task->applicant as $aaaa){
+            //   dd($aaaa->user);
+            // }
+
             return view('task_request', ['assignee' => $assignee, 'task' => $task, 'skillcat' => $skillcat, 'skill' => $skill, 'user' => backpack_user()->id]);
         } elseif ($req->session()->get('draft')!=null) {
             $draft = $req->session()->get('draft');
@@ -176,6 +181,11 @@ class TaskController extends Controller
     public function proposeReject(Request $req)
     {
         $task = Task::find($req->task_id);
+
+        $euser = User::find($task->assign_id);
+        $euser->task_reject = $euser->task_reject + 1;
+        $euser->save();
+
         $task->status = "Open";
         $task->assign_id = null;
         $task->save();
@@ -191,6 +201,11 @@ class TaskController extends Controller
         $task = Task::find($req->task_id);
         $task->status = "In Progress";
         $task->save();
+
+        $euser = User::find($task->assign_id);
+        $euser->task_accept = $euser->task_accept + 1;
+        $euser->save();
+
         $task = array($task->id, $task->skill_cat_id);
         Session::put(['task' => $task, 'draft' => []]);
         return redirect(route('task.showrequest', [], false))->with([
@@ -215,6 +230,11 @@ class TaskController extends Controller
     public function cancellationApprove(Request $req)
     {
         $task = Task::find($req->task_id);
+
+        $euser = User::find($task->assign_id);
+        $euser->task_cancel = $euser->task_cancel + 1;
+        $euser->save();
+
         $task->status = "Open";
         $task->assign_id = null;
         $task->save();
@@ -234,7 +254,12 @@ class TaskController extends Controller
             $new = new Task;
             $new->reference_no = $req->session()->get('draft')[0];
             $new->user_id = backpack_user()->id;
-        } else {
+
+            $euser = User::find(backpack_user()->id);
+            $euser->task_create = $euser->task_create + 1;
+            $euser->save();
+
+        }else{
             $new = Task::find($req->inputid);
             $new->reference_no = $req->inputref;
         }
@@ -355,8 +380,6 @@ class TaskController extends Controller
         $task->status = 'Request to Cancel';
         $task->save();
 
-
-
         return redirect(route('task.showpending', [], false))->with([
               'feedback' => true,
               'feedback_text' => "The task has been cancelled and redirected to requestor!!",
@@ -385,6 +408,11 @@ class TaskController extends Controller
     {
         $task = Task::find($req->id);
         $task->status = 'Completed';
+        $euser = User::find($task->assign_id);
+        $euser->task_complete = $euser->task_complete + 1;
+        $euser->total_do_count = $euser->total_do_count + 1;
+        $euser->total_do_rating = $euser->total_do_rating + $req->rating_assign;
+        $euser->save();
         $task->rating_assign = $req->rating_assign;
 
         $task->success_rating_assign = $req->success_rating_assign;
@@ -407,6 +435,12 @@ class TaskController extends Controller
       //  $task->status = 'Completed';
         $task->rating_user = $req->rating_user;
 
+        $euser = User::find($task->user_id);
+        $euser->task_complete = $euser->task_complete + 1;
+        $euser->total_req_count = $euser->total_req_count + 1;
+        $euser->total_req_rating = $euser->total_req_rating + $req->rating_user;
+        $euser->save();
+
         $task->success_rating_user = $req->success_rating_user;
 
         $task->save();
@@ -415,7 +449,7 @@ class TaskController extends Controller
 
         return redirect(route('task.showlist', [], false))->with([
                   'feedback' => true,
-                  'feedback_text' => "The task has been completed",
+                  'feedback_text' => "Thank you for submitting the rating",
                   'feedback_type' => "info"
               ]);
     }

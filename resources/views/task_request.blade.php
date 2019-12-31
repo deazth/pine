@@ -174,7 +174,7 @@
                               						title="Edit" data-toggle="modal" data-target="#reqRateForm"
                               						data-id="{{$task->id}}">Approve</button>
 
-                            <!---- resquester action  end--->
+                            <!-- resquester action  end--->
 
 
 
@@ -205,7 +205,7 @@
                     @endif
 
 
-                    <!---- assignee rate action --->
+                    <!-- assignee rate action --->
                        @if(($task->status=="Completed") )
 
                            <div class="mb-4 text-info">Hooray Jobs completed and requester has rate you {{$task->rating_assign}}</div>
@@ -217,7 +217,7 @@
 
                                    @endif
 
-                  <!---- assignee rate action--->
+                  <!-- assignee rate action--->
 
 
                     @if($draft ?? '')
@@ -229,6 +229,42 @@
         </div>
     </div>
 </div>
+
+@if($task->status == 'Advertised' && count($task->applicant)!=0)
+<div class="card">
+    <div class="card-header">Applicant</div>
+    <div class="card-body">
+        <div class="container">
+            <div class="table-responsive">
+                <table id="tapplicant" class="table table-bordered">
+                    <thead>
+                        <tr>
+                            <th>Staff Name</th>
+                            <th>Have requested Skil</th>
+                            <th>Staff Rating</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        @foreach($task->applicant as $single)
+                        <tr>
+                            <td><a href="{{ route('user.profile', ['staff_no' => $single->user->staff_no]) }}">{{$single->user->name}}</a></td>
+                            <td>
+                              @if($single->user->hasSkill($task->skill_id))
+                              Yes
+                              @else
+                              No
+                              @endif
+                            </td>
+                            <td>{{$single->user->total_do_count == 0 ? 0 : $single->user->total_do_rating / $single->user->total_do_count }}</td>
+                        </tr>
+                        @endforeach
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+</div>
+@endif
 
 @if($draft ?? '')
     @if($draft[4]!="")
@@ -431,7 +467,7 @@
 		<div class="modal-content">
 
 
-				<div class="modal-header">We are glad the job are finish. </div>
+				<div class="modal-header">We are glad the job are finished. </div>
 				<form method="POST" action="{{route('task.requesterRate')}}">
 					@csrf
 					<div class="modal-body">
@@ -522,6 +558,12 @@ Please rate: 1 <input type="radio" value="1" selected name="rating_user"/>
 
 
 @section('after_scripts')
+<script type="text/javascript" src="{{ asset('packages/datatables.net/js/jquery.dataTables.min.js') }}"></script>
+<script type="text/javascript" src="{{ asset('packages/datatables.net-bs4/js/dataTables.bootstrap4.min.js') }}"></script>
+<script type="text/javascript" src="{{ asset('packages/datatables.net-responsive/js/dataTables.responsive.min.js') }}"></script>
+<script type="text/javascript" src="{{ asset('packages/datatables.net-responsive-bs4/js/responsive.bootstrap4.min.js') }}"></script>
+<script type="text/javascript" src="{{ asset('packages/datatables.net-fixedheader/js/dataTables.fixedHeader.min.js') }}"></script>
+<script type="text/javascript" src="{{ asset('packages/datatables.net-fixedheader-bs4/js/fixedHeader.bootstrap4.min.js') }}"></script>
 <script type="text/javascript">
     $("#inputskillcat").on('change', function(){
         const url='{{ route("task.getskill", [], false)}}';
@@ -601,27 +643,14 @@ Please rate: 1 <input type="radio" value="1" selected name="rating_user"/>
 
       });
 
+      $(document).ready(function() {
+          $('#table').DataTable({
+              "responsive": "true",
+              // "order" : [[1, "asc"]],
+              "searching": false,
+              "bSort": false
+          });
+      });
 
 </script>
 @stop
-
-@section('after_scripts')
-<script type="text/javascript" src="{{ asset('packages/datatables.net/js/jquery.dataTables.min.js') }}"></script>
-<script type="text/javascript" src="{{ asset('packages/datatables.net-bs4/js/dataTables.bootstrap4.min.js') }}"></script>
-<script type="text/javascript" src="{{ asset('packages/datatables.net-responsive/js/dataTables.responsive.min.js') }}"></script>
-<script type="text/javascript" src="{{ asset('packages/datatables.net-responsive-bs4/js/responsive.bootstrap4.min.js') }}"></script>
-<script type="text/javascript" src="{{ asset('packages/datatables.net-fixedheader/js/dataTables.fixedHeader.min.js') }}"></script>
-<script type="text/javascript" src="{{ asset('packages/datatables.net-fixedheader-bs4/js/fixedHeader.bootstrap4.min.js') }}"></script>
-
-<script type="text/javascript">
-    $(document).ready(function() {
-        $('#table').DataTable({
-            "responsive": "true",
-            // "order" : [[1, "asc"]],
-            "searching": false,
-            "bSort": false
-        });
-    });
-</script>
-
-@endsection
