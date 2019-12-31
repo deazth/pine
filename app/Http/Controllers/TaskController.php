@@ -110,7 +110,9 @@ class TaskController extends Controller
 
     public function showTaskOpen(Request $req)
     {
-        $task = Task::where('status', 'Advertised')->orderBy('created_at')->get();
+        $task = Task::where('status', 'Advertised')
+          ->where('user_id', '!=', backpack_user()->id)
+          ->orderBy('created_at')->get();
         return view('task_advert', ['task' => $task]);
     }
 
