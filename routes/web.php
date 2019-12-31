@@ -42,6 +42,7 @@ Route::group(['middleware' => ['admin']], function () {
   Route::get( '/task/open','TaskController@showTaskOpen')->name('task.showopen'); //Advertisement
   Route::get( '/task/assigneeComplete','TaskController@assigneeComplete')->name('task.assigneeComplete');
   Route::post( '/task/apply','TaskController@applyForAds')->name('task.apply'); //Advertisement
+  Route::post( '/task/chooseApplication','TaskController@chooseApplication')->name('task.choosapply'); //Advertisement
 
 
 

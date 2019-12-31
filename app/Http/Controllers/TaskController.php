@@ -199,6 +199,7 @@ class TaskController extends Controller
     public function proposeAccept(Request $req)
     {
         $task = Task::find($req->task_id);
+        $task->accepted_date = date('Y-m-d h:i:s');
         $task->status = "In Progress";
         $task->save();
 
@@ -295,6 +296,7 @@ class TaskController extends Controller
     public function assigneeComplete(Request $req)
     {
         $task = Task::find($req->task_id);
+        $task->submit_date = date('Y-m-d h:i:s');
         $task->status = 'Pending Verification';
         $task->save();
 
@@ -407,6 +409,7 @@ class TaskController extends Controller
     public function requesterRate(Request $req)
     {
         $task = Task::find($req->id);
+        $task->complete_date = date('Y-m-d h:i:s');
         $task->status = 'Completed';
         $euser = User::find($task->assign_id);
         $euser->task_complete = $euser->task_complete + 1;
@@ -452,5 +455,36 @@ class TaskController extends Controller
                   'feedback_text' => "Thank you for submitting the rating",
                   'feedback_type' => "info"
               ]);
+    }
+
+    public function chooseApplication(Request $req){
+      $appsli = TaskAdsApplication::find($req->trid);
+      if($appsli){
+
+        $thetask = $appsli->task;
+        $user = $appsli->user;
+
+        $thetask->status = "In Progress";
+        $task->accepted_date = date('Y-m-d h:i:s');
+        $thetask->assign_id = $user->id;
+        $user->task_accept = $user->task_accept + 1;
+        $user->save();
+        $thetask->save();
+
+        return redirect(route('task.viewrequest', ['inputid' => $thetask->id]))
+          ->with([
+              'feedback' => true,
+              'feedback_text' => "Application accepted and assigned",
+              'feedback_type' => "success"
+          ]);
+
+
+      } else {
+        return redirect()->back()->with([
+            'feedback' => true,
+            'feedback_text' => "That application no longer exist",
+            'feedback_type' => "danger"
+        ]);
+      }
     }
 }

@@ -555,7 +555,13 @@ Please rate: 1 <input type="radio" value="1" selected name="rating_user"/>
 
 
 
+@section('after_styles')
+  <!-- DATA TABLES -->
+  <link rel="stylesheet" type="text/css" href="{{ asset('packages/datatables.net-bs4/css/dataTables.bootstrap4.min.css') }}">
+  <link rel="stylesheet" type="text/css" href="{{ asset('packages/datatables.net-fixedheader-bs4/css/fixedHeader.bootstrap4.min.css') }}">
+  <link rel="stylesheet" type="text/css" href="{{ asset('packages/datatables.net-responsive-bs4/css/responsive.bootstrap4.min.css') }}">
 
+@endsection
 
 @section('after_scripts')
 <script type="text/javascript" src="{{ asset('packages/datatables.net/js/jquery.dataTables.min.js') }}"></script>
@@ -643,14 +649,17 @@ Please rate: 1 <input type="radio" value="1" selected name="rating_user"/>
 
       });
 
-      $(document).ready(function() {
-          $('#table').DataTable({
-              "responsive": "true",
-              // "order" : [[1, "asc"]],
-              "searching": false,
-              "bSort": false
-          });
-      });
+      // $(document).ready(function() {
+      //     $('#table').DataTable({
+      //         "responsive": "true",
+      //         // "order" : [[1, "asc"]],
+      //         "searching": false,
+      //         "bSort": false
+      //     });
+      //     $('#tapplicant').DataTable({
+      //         "responsive": "true",
+      //     });
+      // });
 
 </script>
 @stop
