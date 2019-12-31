@@ -16,7 +16,8 @@ class UserSkillController extends Controller
      */
     public function index()
     {
-      $us = UserSkill::all();
+      $user_id = backpack_user()->id;
+      $us = UserSkill::where('user_id',$user_id);
           return view('userSkill.index', ['userSkills' => $us]);
     }
 

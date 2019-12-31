@@ -10,14 +10,8 @@
 @endif
 
 <div class="card">
-    <div class="card-header">Request Task list</div>
+    <div class="card-header">Assigned Task list</div>
         <div class="card-body">
-        <div class="text-right" style="margin-bottom: 15px">
-            <form action="{{route('task.newrequest')}}" method="POST" style="display:inline">
-                @csrf
-                <button type="submit" class="btn btn-success">REQUEST NEW TASK</button>
-            </form>
-        </div>
         <div class="table-responsive">
             <table id="table" class="table table-bordered">
                 <thead>
@@ -31,7 +25,7 @@
                 </thead>
                 <tbody>
 
-                    @foreach($task as $no=>$single)
+                    @foreach($assign as $no=>$single)
                         <tr>
                             <td>{{++$no}}</td>
                             <td>{{$single->reference_no}}</td>

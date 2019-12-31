@@ -93,6 +93,13 @@ class TaskController extends Controller
         return view('task_list', ['task' => $task]);
 
     }
+    
+    public function showTaskPending(Request $req)
+    {
+        $assign = Task::where('assign_id', backpack_user()->id)->orderBy('created_at')->get();
+        return view('task_pending', ['assign' => $assign]);
+
+    }
 
     public function showTask(Request $req)
     {
@@ -103,21 +110,33 @@ class TaskController extends Controller
     public function showTaskRequest(Request $req){
         $skillcat = SkillCat::all();
         $assignee = User::all();
+        // dd($req);
         if($req->session()->get('task')!=null){
-            $task = $req->session()->get('task');
-            $skill = Skill::where('skill_cat_id', $req->session()->get('task')->skill_cat_id)->get();
-            return view('task_request', ['assignee' => $assignee, 'task' => $task, 'skillcat' => $skillcat, 'skill' => $skill]);
+            // $task = $req->session()->get('task');
+            $task = Task::where('id', $req->session()->get('task')[0])->first();
+            $skill = Skill::where('skill_cat_id', $req->session()->get('task')[1])->get();
+            return view('task_request', ['assignee' => $assignee, 'task' => $task, 'skillcat' => $skillcat, 'skill' => $skill, 'user' => backpack_user()->id]);
         }else if($req->session()->get('draft')!=null){
             $draft = $req->session()->get('draft');
-            return view('task_request', ['assignee' => $assignee, 'draft' => $draft, 'skillcat' => $skillcat]);
+            return view('task_request', ['assignee' => $assignee, 'draft' => $draft, 'skillcat' => $skillcat, 'user' => backpack_user()->id]);
         }else{
-            return view('task_request', []);
+
+            return redirect(route('task.showlist',[],false));
         }
     }
 
     public function showTaskRequestNew(Request $req){
-        $draft = array(date("Ymd")."-".sprintf("%08d", backpack_user()->id)."-".rand(10000,99999), "Draft");
+        $draft = array(date("Ymd")."-".sprintf("%08d", backpack_user()->id)."-".rand(10000,99999), "Draft", backpack_user()->staff_no, backpack_user()->name);
         Session::put(['task' => [], 'draft' => $draft]);
+        return redirect(route('task.showrequest',[],false));
+    }
+
+    public function viewTaskRequest(Request $req)
+    {
+        $taskid = Task::where('id', $req->inputid)->first();
+        $task = array($taskid->id, $taskid->skill_cat_id);
+        Session::put(['task' => $task, 'draft' => []]);
+        // dd($req);
         return redirect(route('task.showrequest',[],false));
     }
 
