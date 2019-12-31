@@ -43,7 +43,7 @@
                                 <div class="col-lg-10">
                                     <input class="form-control" type="text" id="inputname" name="inputname" 
                                     @if($task ?? '') 
-                                        value="{{$task->refno}}" disabled
+                                        value="{{$task->name}}" disabled
                                     @endif
                                     required>
                                 </div>
@@ -52,13 +52,13 @@
                                 <div class="col-lg-10">
                                     <textarea class="form-control" type="text" id="inputdescription" name="inputdescription" 
                                     @if($task ?? '') 
-                                        value="{{$task->refno}}" 
                                         @if($task->status!="Open")
                                             disabled
                                         @endif
                                     @endif
                                     rows="5"
-                                    required></textarea>
+                                    required>@if($task ?? ''){{$task->descr}}@endif
+                                    </textarea>
                                 </div>
                                 <div class="mt-2 col-lg-12"></div>
                                 <div class="col-lg-2">Skill Category:</div>

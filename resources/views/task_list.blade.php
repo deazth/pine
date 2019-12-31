@@ -1,6 +1,14 @@
 @extends('master')
 
 @section('content')
+
+@if(session()->has('feedback'))
+<div class="alert alert-{{session()->get('feedback_type')}} alert-dismissible" id="alert">
+    <a href="#" class="close" data-dismiss="alert" aria-label="close">&times;</a>
+    {{session()->get('feedback_text')}}
+</div>
+@endif
+
 <div class="card">
     <div class="card-header">Request Task list</div>
         <div class="card-body">
@@ -10,12 +18,6 @@
                 <button type="submit" class="btn btn-success">REQUEST NEW TASK</button>
             </form>
         </div>
-        @if(session()->has('feedback'))
-        <div class="alert alert-{{session()->get('feedback_type')}} alert-dismissible" id="alert">
-            <a href="#" class="close" data-dismiss="alert" aria-label="close">&times;</a>
-            {{session()->get('feedback_text')}}
-        </div>
-        @endif
         <div class="table-responsive">
             <table id="table" class="table table-bordered">
                 <thead>
@@ -35,7 +37,13 @@
                             <td>{{$single->reference_no}}</td>
                             <td>{{$single->name}}</td>
                             <td>{{$single->status}}</td>
-                            <td></td>
+                            <td>
+                                <form action="{{route('task.viewrequest')}}" method="POST" style="display:inline">
+                                    <input class="form-control" type="text" hidden name="inputid" value="{{$single->id}}" required>
+                                    @csrf
+                                    <button type="submit" class="btn btn-success">VIEW</button>
+                                </form>
+                            </td>
                         </tr>
                     @endforeach
                 </tbody>
@@ -44,42 +52,38 @@
     </div>
 </div>
 
-<div class="card">
-    <div class="card-header">Assigned Task list</div>
-        <div class="card-body">
-        @if(session()->has('feedback'))
-        <div class="alert alert-{{session()->get('feedback_type')}} alert-dismissible" id="alert">
-            <a href="#" class="close" data-dismiss="alert" aria-label="close">&times;</a>
-            {{session()->get('feedback_text')}}
-        </div>
-        @endif
-        <div class="table-responsive">
-            <table id="table" class="table table-bordered">
-                <thead>
-                    <tr>
-                        <th>No</th>
-                        <th>Reference No</th>
-                        <th>Title</th>
-                        <th>Status</th>
-                        <th>Action</th>
-                    </tr>
-                </thead>
-                <tbody>
-
-                    @foreach($assign as $no=>$single)
+@if(count($assign)!=0)
+    <div class="card">
+        <div class="card-header">Assigned Task list</div>
+            <div class="card-body">
+            <div class="table-responsive">
+                <table id="table" class="table table-bordered">
+                    <thead>
                         <tr>
-                            <td>{{++$no}}</td>
-                            <td>{{$single->reference_no}}</td>
-                            <td>{{$single->name}}</td>
-                            <td>{{$single->status}}</td>
-                            <td></td>
+                            <th>No</th>
+                            <th>Reference No</th>
+                            <th>Title</th>
+                            <th>Status</th>
+                            <th>Action</th>
                         </tr>
-                    @endforeach
-                </tbody>
-            </table>
+                    </thead>
+                    <tbody>
+
+                        @foreach($assign as $no=>$single)
+                            <tr>
+                                <td>{{++$no}}</td>
+                                <td>{{$single->reference_no}}</td>
+                                <td>{{$single->name}}</td>
+                                <td>{{$single->status}}</td>
+                                <td></td>
+                            </tr>
+                        @endforeach
+                    </tbody>
+                </table>
+            </div>
         </div>
     </div>
-</div>
+@endif
 @endsection
 
 @section('after_scripts')
