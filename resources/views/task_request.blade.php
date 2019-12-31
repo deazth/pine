@@ -163,8 +163,8 @@
                                 @endif
                             @elseif($task->status=="Request to Cancel")
                                 <div class="mb-4 text-danger">The assignee has requested to cancel his progress</div>
-                                <a href="{{route('task.cancellationreject')}}" onClick="confirm('Reject assignee request to cancel?')"><button type="button" class="btn btn-danger">Reject</button></a>
-                                <a href="{{route('task.cancellationapprove')}}" onClick="confirm('Approve assignee request to cancel?')"><button type="button" class="btn btn-success">Approve</button>
+                                <a href="{{route('task.cancellationreject',['task_id'=>$task->id ],false)}}" onClick="confirm('Reject assignee request to cancel?')"><button type="button" class="btn btn-danger">Reject</button></a>
+                                <a href="{{route('task.cancellationapprove',['task_id'=>$task->id ],false)}}" onClick="confirm('Approve assignee request to cancel?')"><button type="button" class="btn btn-success">Approve</button>
                                <!---- resquester action --->
                                   @elseif($task->status=="Pending Verification")
                                       <div class="mb-4 text-info">The assignee has marked this task as completed</div>
@@ -200,24 +200,23 @@
                             <a href="{{route('task.assigneeCancel',['task_id'=>$task->id ],false) }}" onClick="return confirm('Request to cancel this task?')"><button type="button" class="btn btn-danger">Request Cancellation</button></a>
                             <a href="{{route('task.assigneeComplete',['task_id'=>$task->id ],false) }}" onClick="return confirm('Mark this task as completed?')"><button type="button" class="btn btn-success" onclick="assigneeAction($task->id)">Task Completed</button></a>
                             <a href="{{route('task.assigneeExtend',['task_id'=>$task->id ],false) }}" onClick="confirm('Extend this task as a requester to another assignee?')"><button type="button" class="btn btn-primary">Extend</button></a>
-                            @endif
+                            @elseif(($task->status=="Completed")&&($task->rating_user==null))
+
+                            <div class="mb-4 text-info">Hooray Jobs completed and requester has rate you {{$task->rating_assign}}</div>
+
+
+                            <button id="btnassigneerate" type="button" class="btn btn-info"
+                                title="Edit" data-toggle="modal" data-target="#assRateForm"
+                                data-id="{{$task->id}}">Rate Requester</button>
+
+        @endif
+
+<!---- assignee rate action--->
                         @endif
                     @endif
 
 
-                    <!-- assignee rate action --->
-                       @if(($task->status=="Completed") )
-
-                           <div class="mb-4 text-info">Hooray Jobs completed and requester has rate you {{$task->rating_assign}}</div>
-
-
-                             <button id="btnassigneerate" type="button" class="btn btn-info"
-                               title="Edit" data-toggle="modal" data-target="#assRateForm"
-                               data-id="{{$task->id}}">Rate Requester</button>
-
-                                   @endif
-
-                  <!-- assignee rate action--->
+                    
 
 
                     @if($draft ?? '')
@@ -229,6 +228,40 @@
         </div>
     </div>
 </div>
+
+
+@if($draft ?? '')
+    @if($draft[4]!="")
+    <div class="card">
+        <div class="card-header">Original Task</div>
+        <div class="card-body">
+            <div class="container">
+                <div class="table-responsive">
+                    <table id="table" class="table table-bordered">
+                        <thead>
+                            <tr>
+                                <th>Reference No</th>
+                                <th>Task title</th>
+                                <th>Date Created</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr>
+                                <td><a href="{{route('task.viewrequest',['inputid'=>$draft[4] ],false) }}" onClick="return confirm('View parent task?')">{{$draft[5]}}
+                                </a></td>
+                                <td>{{$draft[6]}}</td>
+                                <td>{{$draft[7]}}</td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+    </div>
+    @endif
+@endif
+
+@if($task ?? '')
 
 @if($task->status == 'Advertised' && count($task->applicant)!=0)
 <div class="card">
@@ -265,39 +298,6 @@
     </div>
 </div>
 @endif
-
-@if($draft ?? '')
-    @if($draft[4]!="")
-    <div class="card">
-        <div class="card-header">Original Task</div>
-        <div class="card-body">
-            <div class="container">
-                <div class="table-responsive">
-                    <table id="table" class="table table-bordered">
-                        <thead>
-                            <tr>
-                                <th>Reference No</th>
-                                <th>Task title</th>
-                                <th>Date Created</th>
-                            </tr>
-                        </thead>
-                        <tbody>
-                            <tr>
-                                <td><a href="{{route('task.viewrequest',['inputid'=>$draft[4] ],false) }}" onClick="return confirm('View parent task?')">{{$draft[5]}}
-                                </a></td>
-                                <td>{{$draft[6]}}</td>
-                                <td>{{$draft[7]}}</td>
-                            </tr>
-                        </tbody>
-                    </table>
-                </div>
-            </div>
-        </div>
-    </div>
-    @endif
-@endif
-
-@if($task ?? '')
     @if($task->parent_id!="")
     <div class="card">
         <div class="card-header">Original Task</div>
@@ -391,7 +391,7 @@
                                 @php($previous = $single->user_id)
                             @endforeach
                         @endif
-                        @if(($task->status!="Open")&&($task->status!="Advertised")&&($task->status!="Proposed"))
+                        @if(($task->status!="Open")&&($task->status!="Advertised")&&($task->status!="Proposed")&&($task->status!="Completed"))
                                 <form action="{{route('task.submitmsg')}}" method="POST">
                                     @csrf
                                     <input class="form-control" type="text" hidden name="inputid" value="{{$task->id}}" required>
@@ -409,20 +409,35 @@
             <div class="col-lg-6">
                     <div class="card">
                         <div class="card-header">Task Log</div>
+                        <div class="container mt-2">
+                                <div class="table-responsive">
+                                    <table id="table" class="table table-bordered">
+                                        <thead>
+                                            <tr>
+                                                <th>Description</th>
+                                                <th>Time</th>
+                                            </tr>
+                                        </thead>
+                                        <tbody>
+                                            @foreach($task->log as $single)
+                                            <tr>
+                
+                                                <td>{{$single->description}}</td>
+                                                <td>{{$single->created_at}}</td>
+                                            </tr>
+                                            @endforeach
+                                        </tbody>
+                                    </table>
+                                </div>
+                            </div>
                         <div class="card-body">
-                    </div>
+                        </div>
                 </div>
+                </div>
+                
         </div>
 
 @endif
-
-
-<!-- Task Parent -->
-<!-- <div class="card">
-    <div class="card-header">Task Request</div>
-    <div class="card-body">
-    </div>
-</div> -->
 
 @endsection
 
@@ -477,11 +492,11 @@
 							<input class="form-control col-sm-3" id="task_id_rate"
 								name="id" type="hidden" >
 						</div>
-Please rate: 1 <input type="radio" value="1" name="rating_asign" selected/>
-            2<input type="radio" value="2" name="rating_assign"/>
-            3<input type="radio" value="3" name="rating_assign"/>
-            4<input type="radio" value="4" name="rating_assign"/>
-            5<input type="radio" value="5" name="rating_assign"/>
+Please rate: 1 <input type="radio" value="1" name="rating_assign" checked>
+            2<input type="radio" value="2" name="rating_assign">
+            3<input type="radio" value="3" name="rating_assign">
+            4<input type="radio" value="4" name="rating_assign">
+            5<input type="radio" value="5" name="rating_assign">
 
             <select name="success_rating_assign" class="form-control">
               <option value="1">Service Excellence</option>
@@ -643,14 +658,14 @@ Please rate: 1 <input type="radio" value="1" selected name="rating_user"/>
 
       });
 
-      $(document).ready(function() {
-          $('#table').DataTable({
-              "responsive": "true",
-              // "order" : [[1, "asc"]],
-              "searching": false,
-              "bSort": false
-          });
-      });
+    //   $(document).ready(function() {
+    //       $('#table').DataTable({
+    //           "responsive": "true",
+    //           // "order" : [[1, "asc"]],
+    //           "searching": false,
+    //           "bSort": false
+    //       });
+    //   });
 
 </script>
 @stop
