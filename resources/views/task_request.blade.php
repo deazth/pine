@@ -164,7 +164,10 @@
                                   @elseif($task->status=="Pending Verification")
                                       <div class="mb-4 text-info">The assignee has marked this task as completed</div>
                                       <a href="{{route('task.requesterReject',['task_id'=>$task->id ],false) }}" onClick="confirm('Mark incomplete and return to assignee?')"><button type="button" class="btn btn-danger">Reject</button></a>
-                                      <a href="{{route('task.cancellationapprove')}}" onClick="confirm('Approve assignee request to cancel?')"><button type="button" class="btn btn-success">Approve</button>
+
+                                        <button id="btnapprove" type="button" class="btn btn-info"
+                              						title="Edit" data-toggle="modal" data-target="#reqRateForm"
+                              						data-id="{{$task->id}}">Approve</button>
 
                             <!---- resquester action  end--->
                             @endif
@@ -235,6 +238,69 @@
     </div>
 </div>
 
+
+
+
+<div class="modal fade" id="reqRateForm" tabindex="-1" role="dialog"
+	aria-hidden="true">
+	<div class="modal-dialog" role="document">
+		<div class="modal-content">
+
+
+				<div class="modal-header">We are glad the job are finish. </div>
+				<form method="POST" action="{{}}">
+					@csrf
+					<div class="modal-body">
+
+						<div class="form-group row">
+
+							<input class="form-control col-sm-3" id="task_id_rate"
+								name="id" type="hidden" >
+						</div>
+Please rate: 1 <input type="radio" value="1" name="rateAssignee"/>
+            2<input type="radio" value="2" name="rateAssignee"/>
+            3<input type="radio" value="3" name="rateAssignee"/>
+            4<input type="radio" value="4" name="rateAssignee"/>
+            5<input type="radio" value="5" name="rateAssignee"/>
+
+            <select name="success_rating_assign" class="form-control">
+              <option value="1">Service Excellence</option>
+              <option value="2">Unity and Teamwork</option>
+              <option value="3">Cultivates stakeholders Collaboration</option>
+              <option value="4">Catalyzes Change</option>
+              <option value="5">Embraces & Nurtures Talent Mindset</option>
+              <option value="6">Strives for Results</option>
+              <option value="7">Strategic & Entrepreneurial Mindset</option>
+
+            </select>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+					</div>
+					<div class="modal-footer">
+						<button type="button" class="btn btn-secondary"
+							data-dismiss="modal">Close</button>
+						<button type="submit" class="btn btn-primary">Save changes</button>
+					</div>
+				</form>
+
+		</div>
+	</div>
+</div>
+
 @section('after_scripts')
 <script type="text/javascript">
     $("#inputskillcat").on('change', function(){
@@ -292,6 +358,19 @@
     		$('#formAssigneeAction').submit();
 
       };
+
+      $('#reqRateForm').on('show.bs.modal', function(e) {
+          //get data-id attribute of the clicked element
+          var id = $(e.relatedTarget).data('id');
+
+
+          //populate the textbox
+        //  $(e.currentTarget).find('task_id_rate').val(id);
+  $(e.currentTarget).find('input[name="id"]').val(id);
+
+      });
+
+
 </script>
 @stop
 
