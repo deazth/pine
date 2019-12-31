@@ -124,6 +124,11 @@ class TaskController extends Controller
             // $task = $req->session()->get('task');
             $task = Task::where('id', $req->session()->get('task')[0])->first();
             $skill = Skill::where('skill_cat_id', $req->session()->get('task')[1])->get();
+
+            // foreach($task->applicant as $aaaa){
+            //   dd($aaaa->user);
+            // }
+
             return view('task_request', ['assignee' => $assignee, 'task' => $task, 'skillcat' => $skillcat, 'skill' => $skill, 'user' => backpack_user()->id]);
         }else if($req->session()->get('draft')!=null){
             $draft = $req->session()->get('draft');
@@ -161,9 +166,15 @@ class TaskController extends Controller
     public function proposeReject(Request $req)
     {
         $task = Task::find($req->task_id);
+
+        $euser = User::find($task->assign_id);
+        $euser->task_reject = $euser->task_reject + 1;
+        $euser->save();
+
         $task->status = "Open";
         $task->assign_id = null;
         $task->save();
+
         return redirect(route('task.showpending',[],false))->with([
             'feedback' => true,
             'feedback_text' => "Successfully rejected new task request!",
@@ -176,6 +187,11 @@ class TaskController extends Controller
         $task = Task::find($req->task_id);
         $task->status = "In Progress";
         $task->save();
+
+        $euser = User::find($task->assign_id);
+        $euser->task_accept = $euser->task_accept + 1;
+        $euser->save();
+
         $task = array($task->id, $task->skill_cat_id);
         Session::put(['task' => $task, 'draft' => []]);
         return redirect(route('task.showrequest',[],false))->with([
@@ -200,6 +216,11 @@ class TaskController extends Controller
     public function cancellationApprove(Request $req)
     {
         $task = Task::find($req->task_id);
+
+        $euser = User::find($task->assign_id);
+        $euser->task_cancel = $euser->task_cancel + 1;
+        $euser->save();
+
         $task->status = "Open";
         $task->assign_id = null;
         $task->save();
@@ -218,6 +239,11 @@ class TaskController extends Controller
             $new = new Task;
             $new->reference_no = $req->session()->get('draft')[0];
             $new->user_id = backpack_user()->id;
+
+            $euser = User::find(backpack_user()->id);
+            $euser->task_create = $euser->task_create + 1;
+            $euser->save();
+
         }else{
             $new = Task::find($req->inputid);
             $new->reference_no = $req->inputref;
@@ -225,7 +251,7 @@ class TaskController extends Controller
         if($req->inputparentid!=null){
             $new->parent_id = $req->inputparentid;
         }
-        
+
         $new->name = $req->inputname;
         $new->descr = $req->inputdescription;
         $new->skill_id = $req->inputskill;
@@ -338,10 +364,12 @@ public function assigneeComplete(Request $req)
       public function requesterVerify(Request $req)
       {
           $task = Task::find($req->task_id);
-          $task->status = 'Request to Cancel';
+          $task->status = 'Complete';
           $task->save();
 
-
+          $euser = User::find($task->assign_id);
+          $euser->task_complete = $euser->task_complete + 1;
+          $euser->save();
 
           return redirect(route('task.showpending',[],false))->with([
               'feedback' => true,

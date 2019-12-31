@@ -19,7 +19,7 @@
                 @elseif($draft ?? '')
                     @if($draft[4]!="")
                     <input class="form-control" type="text" hidden name="inputparentid" value="{{$draft[4]}}" required>
-                    
+
                     @endif
                 @endif
                 <input class="form-control d-none" type="text" hidden id="inputassignid" name="inputassignid">
@@ -169,7 +169,7 @@
                                   @elseif($task->status=="Pending Verification")
                                       <div class="mb-4 text-info">The assignee has marked this task as completed</div>
                                       <a href="{{route('task.requesterReject',['task_id'=>$task->id ],false) }}" onClick="confirm('Mark incomplete and return to assignee?')"><button type="button" class="btn btn-danger">Reject</button></a>
-                                      <a href="{{route('task.cancellationapprove')}}" onClick="confirm('Approve assignee request to cancel?')"><button type="button" class="btn btn-success">Approve</button>
+                                      <a href="{{route('task.cancellationapprove')}}" onClick="confirm('Mark this task ask complete?')"><button type="button" class="btn btn-success">Approve</button>
 
                             <!---- resquester action  end--->
                             @endif
@@ -196,6 +196,42 @@
     </div>
 </div>
 
+@if($task->status == 'Advertised' && count($task->applicant)!=0)
+<div class="card">
+    <div class="card-header">Applicant</div>
+    <div class="card-body">
+        <div class="container">
+            <div class="table-responsive">
+                <table id="tapplicant" class="table table-bordered">
+                    <thead>
+                        <tr>
+                            <th>Staff Name</th>
+                            <th>Have requested Skil</th>
+                            <th>Staff Rating</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        @foreach($task->applicant as $single)
+                        <tr>
+                            <td><a href="{{ route('user.profile', ['staff_no' => $single->user->staff_no]) }}">{{$single->user->name}}</a></td>
+                            <td>
+                              @if($single->user->hasSkill($task->skill_id))
+                              Yes
+                              @else
+                              No
+                              @endif
+                            </td>
+                            <td>{{$single->user->total_do_count == 0 ? 0 : $single->user->total_do_rating / $single->user->total_do_count }}</td>
+                        </tr>
+                        @endforeach
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+</div>
+@endif
+
 @if($draft ?? '')
     @if($draft[4]!="")
     <div class="card">
@@ -217,7 +253,7 @@
                                 </a></td>
                                 <td>{{$draft[6]}}</td>
                                 <td>{{$draft[7]}}</td>
-                            </tr> 
+                            </tr>
                         </tbody>
                     </table>
                 </div>
@@ -248,7 +284,7 @@
                                 </a></td>
                                 <td>{{$task->parent->name}}</td>
                                 <td>{{$task->parent->created_at}}</td>
-                            </tr> 
+                            </tr>
                         </tbody>
                     </table>
                 </div>
@@ -277,7 +313,7 @@
                                 </a></td>
                                 <td>{{$single->name}}</td>
                                 <td>{{$single->created_at}}</td>
-                            </tr> 
+                            </tr>
                             @endforeach
                         </tbody>
                     </table>
@@ -306,7 +342,7 @@
                                 </div>
                             </div>
                         @endforeach
-                        
+
                     </div>
                 </div>
             </div>
@@ -358,6 +394,12 @@
 </div>
 
 @section('after_scripts')
+<script type="text/javascript" src="{{ asset('packages/datatables.net/js/jquery.dataTables.min.js') }}"></script>
+<script type="text/javascript" src="{{ asset('packages/datatables.net-bs4/js/dataTables.bootstrap4.min.js') }}"></script>
+<script type="text/javascript" src="{{ asset('packages/datatables.net-responsive/js/dataTables.responsive.min.js') }}"></script>
+<script type="text/javascript" src="{{ asset('packages/datatables.net-responsive-bs4/js/responsive.bootstrap4.min.js') }}"></script>
+<script type="text/javascript" src="{{ asset('packages/datatables.net-fixedheader/js/dataTables.fixedHeader.min.js') }}"></script>
+<script type="text/javascript" src="{{ asset('packages/datatables.net-fixedheader-bs4/js/fixedHeader.bootstrap4.min.js') }}"></script>
 <script type="text/javascript">
     $("#inputskillcat").on('change', function(){
         const url='{{ route("task.getskill", [], false)}}';
@@ -416,13 +458,3 @@
       };
 </script>
 @stop
-
-@section('after_scripts')
-<script type="text/javascript" src="{{ asset('packages/datatables.net/js/jquery.dataTables.min.js') }}"></script>
-<script type="text/javascript" src="{{ asset('packages/datatables.net-bs4/js/dataTables.bootstrap4.min.js') }}"></script>
-<script type="text/javascript" src="{{ asset('packages/datatables.net-responsive/js/dataTables.responsive.min.js') }}"></script>
-<script type="text/javascript" src="{{ asset('packages/datatables.net-responsive-bs4/js/responsive.bootstrap4.min.js') }}"></script>
-<script type="text/javascript" src="{{ asset('packages/datatables.net-fixedheader/js/dataTables.fixedHeader.min.js') }}"></script>
-<script type="text/javascript" src="{{ asset('packages/datatables.net-fixedheader-bs4/js/fixedHeader.bootstrap4.min.js') }}"></script>
-
-@endsection
