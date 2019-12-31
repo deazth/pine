@@ -13,7 +13,7 @@
         <div class="container">
             <form id="form" action="{{route('task.submitrequest')}}" method="POST">
             @csrf
-                @if($task ?? '')   
+                @if($task ?? '')
                     <input class="form-control" type="text" hidden name="inputid" value="{{$task->id}}" required>
                     <input class="form-control" type="text" hidden name="inputref" value="{{$task->reference_no}}" required>
                 @endif
@@ -24,10 +24,10 @@
                             <div class="row">
                                 <div class="col-lg-2">Reference No:</div>
                                 <div class="col-lg-10">
-                                    @if($task ?? '') 
-                                        {{$task->reference_no}} 
-                                    @elseif($draft ?? '') 
-                                        {{$draft[0]}} 
+                                    @if($task ?? '')
+                                        {{$task->reference_no}}
+                                    @elseif($draft ?? '')
+                                        {{$draft[0]}}
                                     @endif
                                 </div>
                                 <div class="mt-2 col-lg-12"></div>
@@ -40,19 +40,19 @@
                                 <div class="mt-2 col-lg-12"></div>
                                 <div class="col-lg-2">Status:</div>
                                 <div class="col-lg-10">
-                                    @if($task ?? '') 
-                                        {{$task->status}} 
-                                    @elseif($draft ?? '') 
-                                        {{$draft[1]}} 
+                                    @if($task ?? '')
+                                        {{$task->status}}
+                                    @elseif($draft ?? '')
+                                        {{$draft[1]}}
                                     @endif
                                 </div>
                                 <div class="mt-2 col-lg-12"></div>
                                 <div class="col-lg-2">Requested by:</div>
                                 <div class="col-lg-10">
-                                    @if($task ?? '') 
-                                        {{ucfirst($task->user->staff_no)}} - {{ucfirst($task->user->name)}} 
-                                    @elseif($draft ?? '') 
-                                        {{ucfirst($draft[2])}} - {{ucfirst($draft[3])}} 
+                                    @if($task ?? '')
+                                        {{ucfirst($task->user->staff_no)}} - {{ucfirst($task->user->name)}}
+                                    @elseif($draft ?? '')
+                                        {{ucfirst($draft[2])}} - {{ucfirst($draft[3])}}
                                     @endif
                                 </div>
                                     @if($task ?? '') 
@@ -60,8 +60,8 @@
                                         <div class="mt-2 col-lg-12"></div>
                                         <div class="col-lg-2">Assigned to:</div>
                                         <div class="col-lg-10">
-                                                    {{ucfirst($task->assign->staff_no)}} - {{ucfirst($task->assign->name)}} 
-                                                
+                                                    {{ucfirst($task->assign->staff_no)}} - {{ucfirst($task->assign->name)}}
+
                                         </div>
                                     @endif
                                 @endif
@@ -88,18 +88,18 @@
                                     @endif
                                 <div class="col-lg-6">
                                     <select class="form-control" id="inputskillcat" name="inputskillcat"
-                                    @if($task ?? '') 
+                                    @if($task ?? '')
                                         @if($task->status!="Open")
                                             readonly
                                         @endif
-                                    @endif    
+                                    @endif
                                     required>
-                                        <option hidden disabled value="" 
-                                            @if($task ?? '') 
-                                                @if($task->skill_cat_id=="") 
-                                                    selected 
-                                                @endif 
-                                            @else 
+                                        <option hidden disabled value=""
+                                            @if($task ?? '')
+                                                @if($task->skill_cat_id=="")
+                                                    selected
+                                                @endif
+                                            @else
                                                 selected
                                             @endif>Select Skill Category
                                         </option>
@@ -118,21 +118,21 @@
                                     @endif
                                 <div class="col-lg-6">
                                     <select class="form-control" id="inputskill" name="inputskill"
-                                    @if($task ?? '') 
+                                    @if($task ?? '')
                                         @if($task->status!="Open")
                                             disabled
                                         @endif
-                                    @elseif($draft ?? '') 
+                                    @elseif($draft ?? '')
                                         disabled
-                                    @endif    
+                                    @endif
                                     required>
-                                        @if($task ?? '') 
+                                        @if($task ?? '')
                                             @foreach($skill as $single)
                                                 <option value="{{$single->id}}">{{$single->name}}</option>
                                             @endforeach
                                         @elseif($draft ?? '')
                                             <option hidden disabled selected value="">Select Skill</option>
-                                        @endif  
+                                        @endif
                                     </select>
                                 </div>
                                 <div class="col-lg-4"></div>
@@ -176,7 +176,7 @@
                 </div>
             </form>
         </div>
-    </div> 
+    </div>
 </div>
 
 
@@ -195,7 +195,7 @@
             <div class="modal-header">
                 <h4 class="modal-title">Propose Assignee</h4>
                 <button type="button" class="close" data-dismiss="modal">&times;</button>
-            
+
             </div>
             <div class="modal-body text-center">
                 <select class="form-control" id="inputassignee" name="inputassignee">
@@ -219,7 +219,7 @@
 <script type="text/javascript">
     $("#inputskillcat").on('change', function(){
         const url='{{ route("task.getskill", [], false)}}';
-    
+
         $.ajax({
         url: url+"?inputskillcat="+$("#inputskillcat").val(),
         type: "GET",
@@ -237,10 +237,10 @@
     });
 
     function updateResp(item, index){
-        $( "#inputskill" ).append('<option value="'+item.id+'">'+item.name+'</option>');  
+        $( "#inputskill" ).append('<option value="'+item.id+'">'+item.name+'</option>');
     }
 
-    
+
     $("#assign").on('click', function(){
         if($('#inputname').get(0).checkValidity()==false){
             $('#inputname').get(0).reportValidity();
@@ -253,8 +253,8 @@
         }else{
             $("#assignee").modal("show");
         }
-    });    
-    
+    });
+
     $("#assignassignee").on('click', function(){
         $("#inputassignid").removeClass("d-none");
         $("#inputassignid").val($("#inputassignee").val());
@@ -263,3 +263,13 @@
     });
 </script>
 @stop
+
+@section('after_scripts')
+<script type="text/javascript" src="{{ asset('packages/datatables.net/js/jquery.dataTables.min.js') }}"></script>
+<script type="text/javascript" src="{{ asset('packages/datatables.net-bs4/js/dataTables.bootstrap4.min.js') }}"></script>
+<script type="text/javascript" src="{{ asset('packages/datatables.net-responsive/js/dataTables.responsive.min.js') }}"></script>
+<script type="text/javascript" src="{{ asset('packages/datatables.net-responsive-bs4/js/responsive.bootstrap4.min.js') }}"></script>
+<script type="text/javascript" src="{{ asset('packages/datatables.net-fixedheader/js/dataTables.fixedHeader.min.js') }}"></script>
+<script type="text/javascript" src="{{ asset('packages/datatables.net-fixedheader-bs4/js/fixedHeader.bootstrap4.min.js') }}"></script>
+
+@endsection
