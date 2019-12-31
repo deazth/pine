@@ -292,7 +292,7 @@ class TaskController extends Controller
             if ($req->inputid==null) {
                 $newl->task_id = $new->id;
             }else{
-                $newl->task_id = $req->$inputid;
+                $newl->task_id = $req->inputid;
             }
             $newl->user_id = backpack_user()->id;
             $newl->description = "Created new task request";
@@ -301,7 +301,7 @@ class TaskController extends Controller
             if ($req->inputid==null) {
                 $newl->task_id = $new->id;
             }else{
-                $newl->task_id = $req->$inputid;
+                $newl->task_id = $req->inputid;
             }
             $newl->user_id = backpack_user()->id;
             $assid = User::find($req->inputassignid);
@@ -320,7 +320,7 @@ class TaskController extends Controller
             if ($req->inputid==null) {
                 $newl->task_id = $new->id;
             }else{
-                $newl->task_id = $req->$inputid;
+                $newl->task_id = $req->inputid;
             }
             $newl->user_id = backpack_user()->id;
             $newl->description = "Created new task request";
@@ -329,7 +329,7 @@ class TaskController extends Controller
             if ($req->inputid==null) {
                 $newl->task_id = $new->id;
             }else{
-                $newl->task_id = $req->$inputid;
+                $newl->task_id = $req->inputid;
             }
             $newl->user_id = backpack_user()->id;
             $newl->description = "Advertised task";
