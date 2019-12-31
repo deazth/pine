@@ -28,6 +28,8 @@ Route::group(['middleware' => ['admin']], function () {
   Route::post( '/task/request/new','TaskController@showTaskRequestNew')->name('task.newrequest');
   Route::post( '/task/request/submit','TaskController@submitTaskRequest')->name('task.submitrequest');
   Route::post( '/task/request/view','TaskController@viewTaskRequest')->name('task.viewrequest');
+  Route::post( '/task/request/msg','TaskController@submitMessage')->name('task.submitmsg');
+  // Route::get( '/task/request/msg','TaskController@submitMessage')->name('task.submitmsg');
   Route::get( '/task/request/view','TaskController@viewTaskRequest')->name('task.viewrequest');
   Route::get( '/task/request/view/propose/reject','TaskController@proposeReject')->name('task.proposedreject');
   Route::get( '/task/request/view/propose/accept','TaskController@proposeAccept')->name('task.proposedaccept');
@@ -45,7 +47,11 @@ Route::group(['middleware' => ['admin']], function () {
 
     Route::get( '/task/assigneeCancel','TaskController@assigneeCancel')->name('task.assigneeCancel');
     Route::get( '/task/assigneeExtend','TaskController@assigneeExtend')->name('task.assigneeExtend');
-      Route::get( '/task/requesterReject','TaskController@requesterReject')->name('task.requesterReject');
+    Route::get( '/task/requesterReject','TaskController@requesterReject')->name('task.requesterReject');
+         Route::post( '/task/requesterRate','TaskController@requesterRate')->name('task.requesterRate');
+     Route::post( '/task/assigneeRate','TaskController@assigneeRate')->name('task.assigneeRate');
+
+
 
   Route::get( '/user/skill/','UserSkillController@index')->name('userskill.index');
   Route::get( '/user/skill/create','UserSkillController@create')->name('userskill.create');
@@ -56,3 +62,7 @@ Route::group(['middleware' => ['admin']], function () {
 
 // so-called API
 Route::get( '/user/image','UserController@getStaffImage')->name('user.image');
+
+
+
+Route::get( '/eraSkill/{keyword}','EraSkillsetController@store')->name('eraskillset.store');

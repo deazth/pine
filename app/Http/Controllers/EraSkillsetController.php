@@ -7,6 +7,11 @@ use Illuminate\Http\Request;
 
 class EraSkillsetController extends Controller
 {
+
+  protected $baseuri = "https://api.oip.tm.com.my/app/t/tmrnd.com.my/era/1.0.0/skillset/search/";
+  protected $options = [
+    'query' => ['api_key' => 'Z9HYE86CIElVjTEJuDOy2eBWPrL96et41wUmjL3M'],
+    'headers' => ['Authorization' => 'Bearer 5a107934-68de-38cd-9a34-60fa4ae46267']
     /**
      * Display a listing of the resource.
      *
@@ -35,6 +40,13 @@ class EraSkillsetController extends Controller
      */
     public function store(Request $request)
     {
+
+
+
+
+
+
+
         //
     }
 

@@ -169,13 +169,30 @@
                                   @elseif($task->status=="Pending Verification")
                                       <div class="mb-4 text-info">The assignee has marked this task as completed</div>
                                       <a href="{{route('task.requesterReject',['task_id'=>$task->id ],false) }}" onClick="confirm('Mark incomplete and return to assignee?')"><button type="button" class="btn btn-danger">Reject</button></a>
-                                      <a href="{{route('task.cancellationapprove')}}" onClick="confirm('Mark this task ask complete?')"><button type="button" class="btn btn-success">Approve</button>
 
-                            <!---- resquester action  end--->
+                                        <button id="btnapprove" type="button" class="btn btn-info"
+                              						title="Edit" data-toggle="modal" data-target="#reqRateForm"
+                              						data-id="{{$task->id}}">Approve</button>
+
+                            <!-- resquester action  end--->
+
+
+
+
+
+
+
                             @endif
+
+
+
+
+
+
+
                         @elseif($task->assign_id==$user)
                             @if($task->status=="Proposed")
-                            <a href="{{route('task.proposedreject',['task_id'=>$task->id ],false)}}" onClick="return confirm('Reject this task?')"><button type="button" class="btn btn-danger">Reject</button></a>
+                            <a href="{{route('task.proposedreject',['task_id'=>$task->id ],false)}}" onClick="return confirm('Reject this task?')"><button type="button" class="btn btn-danger">Decline</button></a>
                             <a href="{{route('task.proposedaccept',['task_id'=>$task->id ],false)}}" onClick="return confirm('Accept this task?')"><button type="button" class="btn btn-success">Accept</button></a>
                             <button id="assign" type="button" class="btn btn-primary"
                                 data-toggle="modal" data-target="#ass">Propose to other Assignee</button>
@@ -186,6 +203,23 @@
                             @endif
                         @endif
                     @endif
+
+
+                    <!-- assignee rate action --->
+                       @if(($task->status=="Completed") )
+
+                           <div class="mb-4 text-info">Hooray Jobs completed and requester has rate you {{$task->rating_assign}}</div>
+
+
+                             <button id="btnassigneerate" type="button" class="btn btn-info"
+                               title="Edit" data-toggle="modal" data-target="#assRateForm"
+                               data-id="{{$task->id}}">Rate Requester</button>
+
+                                   @endif
+
+                  <!-- assignee rate action--->
+
+
                     @if($draft ?? '')
                         <button type="submit" class="btn btn-primary">Advertise Task</button>
                         <button id="assign" type="button" class="btn btn-success" data-toggle="modal" data-target="#ass">Propose Assignee</button>
@@ -322,33 +356,64 @@
         </div>
     </div>
     @endif
-    <div class="container">
         <div class="row">
-            @if(count($task->interaction)!=0)
             <div class="col-lg-6">
                 <div class="card">
                     <div class="card-header">Task Interaction</div>
                     <div class="card-body">
-                        @foreach($task->interction as $single)
-                            <div class="card">
-                                <div class="card-body">
-                                    @if($single->user_id==$task->user_id)
-                                        <div class="w-100" style="text-align: left">{{$single->user->name}}</div>
-                                    @else
-                                        <div class="w-100" style="text-align: right">{{$single->user->name}}</div>
-                                    @endif
-                                    <div class="w-100" style="text-align: center">{{$single->created_at}}</div>
-                                    {{$single->message}}
-                                </div>
-                            </div>
-                        @endforeach
+                        @if(count($task->interaction)!=0)
+                            @php($previous="")
+                            @foreach($task->interaction as $single)
 
+                            <div class="w-100 small" style="text-align: center">{{$single->created_at}}</div>
+                                <div class="card">
+                                    @if($single->user_id!=$previous)
+
+                                        @if($single->user_id==$task->user_id)
+                                            <div class="card-header">
+                                                <div class="w-100" style="text-align: left">{{$single->user->name}}</div>
+                                            </div>
+                                        @else
+                                            <div class="card-header">
+                                            <div class="w-100" style="text-align: right">{{$single->user->name}}</div>
+
+                                            </div>
+                                        @endif
+
+
+
+                                    @endif
+
+                                    <div class="card-body">
+                                     {{$single->message}}
+                                        </div>
+                                </div>
+                                @php($previous = $single->user_id)
+                            @endforeach
+                        @endif
+                        @if(($task->status!="Open")&&($task->status!="Advertised")&&($task->status!="Proposed"))
+                                <form action="{{route('task.submitmsg')}}" method="POST">
+                                    @csrf
+                                    <input class="form-control" type="text" hidden name="inputid" value="{{$task->id}}" required>
+
+                                    <textarea name="inputmessage" id="" class="form-control" rows="3"></textarea>
+                                    <div class="text-center mt-4">
+                                        <button type="submit" class="btn btn-primary">Send Message</button>
+                                    </div>
+                                </form>
+                        @endif
                     </div>
                 </div>
+
             </div>
-            @endif
+            <div class="col-lg-6">
+                    <div class="card">
+                        <div class="card-header">Task Log</div>
+                        <div class="card-body">
+                    </div>
+                </div>
         </div>
-    </div>
+
 @endif
 
 
@@ -392,6 +457,105 @@
         </div>
     </div>
 </div>
+
+
+
+
+<div class="modal fade" id="reqRateForm" tabindex="-1" role="dialog"
+	aria-hidden="true">
+	<div class="modal-dialog" role="document">
+		<div class="modal-content">
+
+
+				<div class="modal-header">We are glad the job are finished. </div>
+				<form method="POST" action="{{route('task.requesterRate')}}">
+					@csrf
+					<div class="modal-body">
+
+						<div class="form-group row">
+
+							<input class="form-control col-sm-3" id="task_id_rate"
+								name="id" type="hidden" >
+						</div>
+Please rate: 1 <input type="radio" value="1" name="rating_asign" selected/>
+            2<input type="radio" value="2" name="rating_assign"/>
+            3<input type="radio" value="3" name="rating_assign"/>
+            4<input type="radio" value="4" name="rating_assign"/>
+            5<input type="radio" value="5" name="rating_assign"/>
+
+            <select name="success_rating_assign" class="form-control">
+              <option value="1">Service Excellence</option>
+              <option value="2">Unity and Teamwork</option>
+              <option value="3">Cultivates stakeholders Collaboration</option>
+              <option value="4">Catalyzes Change</option>
+              <option value="5">Embraces & Nurtures Talent Mindset</option>
+              <option value="6">Strives for Results</option>
+              <option value="7">Strategic & Entrepreneurial Mindset</option>
+
+            </select>
+					</div>
+					<div class="modal-footer">
+						<button type="button" class="btn btn-secondary"
+							data-dismiss="modal">Close</button>
+						<button type="submit" class="btn btn-primary">Save changes</button>
+					</div>
+				</form>
+
+		</div>
+	</div>
+</div>
+
+
+
+
+
+<div class="modal fade" id="assRateForm" tabindex="-1" role="dialog"
+	aria-hidden="true">
+	<div class="modal-dialog" role="document">
+		<div class="modal-content">
+
+
+				<div class="modal-header">Rate the requester</div>
+				<form method="POST" action="{{route('task.assigneeRate')}}">
+					@csrf
+					<div class="modal-body">
+
+						<div class="form-group row">
+
+							<input class="form-control col-sm-3" id="task_id_rate"
+								name="id" type="hidden" >
+						</div>
+Please rate: 1 <input type="radio" value="1" selected name="rating_user"/>
+            2<input type="radio" value="2" name="rating_user"/>
+            3<input type="radio" value="3" name="rating_user"/>
+            4<input type="radio" value="4" name="rating_user"/>
+            5<input type="radio" value="5" name="rating_user"/>
+
+            <select name="success_rating_user" class="form-control">
+              <option value="1">Service Excellence</option>
+              <option value="2">Unity and Teamwork</option>
+              <option value="3">Cultivates stakeholders Collaboration</option>
+              <option value="4">Catalyzes Change</option>
+              <option value="5">Embraces & Nurtures Talent Mindset</option>
+              <option value="6">Strives for Results</option>
+              <option value="7">Strategic & Entrepreneurial Mindset</option>
+
+            </select>
+					</div>
+					<div class="modal-footer">
+						<button type="button" class="btn btn-secondary"
+							data-dismiss="modal">Close</button>
+						<button type="submit" class="btn btn-primary">Save changes</button>
+					</div>
+				</form>
+
+		</div>
+	</div>
+</div>
+
+
+
+
 
 @section('after_scripts')
 <script type="text/javascript" src="{{ asset('packages/datatables.net/js/jquery.dataTables.min.js') }}"></script>
@@ -456,5 +620,37 @@
     		$('#formAssigneeAction').submit();
 
       };
+
+      $('#reqRateForm').on('show.bs.modal', function(e) {
+          //get data-id attribute of the clicked element
+          var id = $(e.relatedTarget).data('id');
+
+
+          //populate the textbox
+        //  $(e.currentTarget).find('task_id_rate').val(id);
+  $(e.currentTarget).find('input[name="id"]').val(id);
+
+      });
+
+      $('#assRateForm').on('show.bs.modal', function(e) {
+          //get data-id attribute of the clicked element
+          var id = $(e.relatedTarget).data('id');
+
+
+          //populate the textbox
+        //  $(e.currentTarget).find('task_id_rate').val(id);
+  $(e.currentTarget).find('input[name="id"]').val(id);
+
+      });
+
+      $(document).ready(function() {
+          $('#table').DataTable({
+              "responsive": "true",
+              // "order" : [[1, "asc"]],
+              "searching": false,
+              "bSort": false
+          });
+      });
+
 </script>
 @stop
