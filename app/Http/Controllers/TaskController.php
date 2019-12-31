@@ -156,6 +156,61 @@ class TaskController extends Controller
         return $arr;
     }
 
+    public function proposeReject(Request $req)
+    {
+        $task = Task::find($req->task_id);
+        $task->status = "Open";
+        $task->assign_id = null;
+        $task->save();
+        return redirect(route('task.showpending',[],false))->with([
+            'feedback' => true,
+            'feedback_text' => "Successfully rejected new task request!",
+            'feedback_type' => "warning"
+        ]);
+    }
+
+    public function proposeAccept(Request $req)
+    {
+        $task = Task::find($req->task_id);
+        $task->status = "In Progress";
+        $task->save();
+        $task = array($task->id, $task->skill_cat_id);
+        Session::put(['task' => $task, 'draft' => []]);
+        return redirect(route('task.showrequest',[],false))->with([
+            'feedback' => true,
+            'feedback_text' => "Successfully accepted new task request!",
+            'feedback_type' => "success"
+        ]);
+    }
+
+    public function cancellationReject(Request $req)
+    {
+        $task = Task::find($req->task_id);
+        $task->status = "In Progress";
+        $task->save();
+        return redirect(route('task.showlist',[],false))->with([
+            'feedback' => true,
+            'feedback_text' => "Successfully rejected task cancellation request!",
+            'feedback_type' => "warning"
+        ]);
+    }
+
+    public function cancellationApprove(Request $req)
+    {
+        $task = Task::find($req->task_id);
+        $task->status = "Open";
+        $task->assign_id = null;
+        $task->save();
+        $task = array($task->id, $task->skill_cat_id);
+        Session::put(['task' => $task, 'draft' => []]);
+        return redirect(route('task.showrequest',[],false))->with([
+            'feedback' => true,
+            'feedback_text' => "Successfully approved task cancellation request!",
+            'feedback_type' => "success"
+        ]);
+    }
+
+
     public function submitTaskRequest(Request $req){
         if($req->inputid==null){
             $new = new Task;
