@@ -153,7 +153,9 @@
                     @if($task ?? '')
                         @if($task->user_id==$user)
                             @if(($task->status=="Open")||($task->status=="Proposed")||($task->status=="Advertised"))
-                                <button type="submit" class="btn btn-primary">Advertise Task</button>
+                                 @if($task->status!="Advertised")
+                                    <button type="submit" class="btn btn-primary">Advertise Task</button>
+                                @endif
                                 @if(($task->status=="Open")||($task->status=="Advertised"))
                                 <button id="assign" type="button" class="btn btn-success"
                                 data-toggle="modal" data-target="#ass">Propose Assignee</button>

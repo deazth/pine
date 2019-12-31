@@ -16,7 +16,9 @@
     <li class='nav-item'><a class='nav-link' href='{{ backpack_url('skill') }}'><i class='nav-icon fa fa-book'></i> Skills</a></li>
   </ul>
 </li>
+<!---
 <li class="nav-title">Contoh</li>
+
 <li class="nav-item nav-dropdown"><a class="nav-link nav-dropdown-toggle" href="#"><i class="nav-icon fa fa-scissors"></i> Samples</a>
   <ul class="nav-dropdown-items">
     <li class="nav-item"><a class="nav-link" href="{{ route('index')}}"><i class="nav-icon fa fa-briefcase"></i> kosong</a></li>
@@ -26,3 +28,4 @@
     <li class="nav-item"><a class="nav-link" href="{{ route('datable')}}"><i class="nav-icon fa fa-briefcase"></i> Data Table</a></li>
   </ul>
 </li>
+--->
