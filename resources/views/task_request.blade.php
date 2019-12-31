@@ -129,8 +129,7 @@
                             @if($task->status=="Open")
                                 <button type="submit" class="btn btn-primary">Advertise Task</button>
                                 <button id="assign" type="button" class="btn btn-success" data-toggle="modal" data-target="#ass">Propose Assignee</button>
-                            @endif
-                            if($task->status=="Request to Cancel")
+                            @elseif($task->status=="Request to Cancel")
                                 <div>The assigne has requested to cancel his progress</div>
                                 <button type="button" class="btn btn-danger">Reject</button>
                                 <button type="button" class="btn btn-success">Approve</button>
@@ -139,8 +138,7 @@
                             @if($task->status=="Proposed")
                                 <button type="button" class="btn btn-danger">Reject</button>
                                 <button type="button" class="btn btn-success">Accept</button>
-                            @endif
-                            @if($task->status=="In Progress")
+                            @elseif($task->status=="In Progress")
                                 <button type="button" class="btn btn-danger">Request Cancellation</button>
                                 <button type="button" class="btn btn-success">Task Completed</button>
                             @endif
