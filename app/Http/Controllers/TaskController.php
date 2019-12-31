@@ -198,6 +198,13 @@ class TaskController extends Controller
         $task->save();
         $task = array($task->id, $task->skill_cat_id);
         Session::put(['task' => $task, 'draft' => []]);
+        $newl = new TaskHistory;
+        $newl->task_id = $req->task_id;
+        $newl->user_id = backpack_user()->id;
+        $assid = User::find(backpack_user()->id);
+        $newl->description = $assid->staff_no."-".$assid->name."has accepted task";
+        $newl->save();
+
         return redirect(route('task.showrequest', [], false))->with([
             'feedback' => true,
             'feedback_text' => "Successfully accepted new task request!",
@@ -210,6 +217,7 @@ class TaskController extends Controller
         $task = Task::find($req->task_id);
         $task->status = "In Progress";
         $task->save();
+
         return redirect(route('task.showlist', [], false))->with([
             'feedback' => true,
             'feedback_text' => "Successfully rejected task cancellation request!",
@@ -259,7 +267,7 @@ class TaskController extends Controller
             if ($req->inputid==null) {
                 $newl->task_id = $new->id;
             }else{
-                $newl->task_id = $inputid;
+                $newl->task_id = $req->$inputid;
             }
             $newl->user_id = backpack_user()->id;
             $newl->description = "Created new task request";
@@ -268,7 +276,7 @@ class TaskController extends Controller
             if ($req->inputid==null) {
                 $newl->task_id = $new->id;
             }else{
-                $newl->task_id = $inputid;
+                $newl->task_id = $req->$inputid;
             }
             $newl->user_id = backpack_user()->id;
             $assid = User::find($req->inputassignid);
@@ -287,7 +295,7 @@ class TaskController extends Controller
             if ($req->inputid==null) {
                 $newl->task_id = $new->id;
             }else{
-                $newl->task_id = $inputid;
+                $newl->task_id = $req->$inputid;
             }
             $newl->user_id = backpack_user()->id;
             $newl->description = "Created new task request";
@@ -296,7 +304,7 @@ class TaskController extends Controller
             if ($req->inputid==null) {
                 $newl->task_id = $new->id;
             }else{
-                $newl->task_id = $inputid;
+                $newl->task_id = $req->$inputid;
             }
             $newl->user_id = backpack_user()->id;
             $newl->description = "Advertised task";
@@ -314,7 +322,11 @@ class TaskController extends Controller
         $task = Task::find($req->task_id);
         $task->status = 'Pending Verification';
         $task->save();
-
+        $newl = new TaskHistory;
+        $newl->task_id = $req->task_id;
+        $newl->user_id = backpack_user()->id;
+        $newl->description = "Assignee request to verify completion";
+        $newl->save();
 
 
         return redirect(route('task.showpending', [], false))->with([
@@ -453,7 +465,11 @@ class TaskController extends Controller
 
         $task->save();
 
-
+        $newl = new TaskHistory;
+        $newl->task_id = $req->id;
+        $newl->user_id = backpack_user()->id;
+        $newl->description = "Task has been completed";
+        $newl->save();
 
         return redirect(route('task.showlist', [], false))->with([
                   'feedback' => true,

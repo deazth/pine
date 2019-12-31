@@ -163,8 +163,8 @@
                                 @endif
                             @elseif($task->status=="Request to Cancel")
                                 <div class="mb-4 text-danger">The assignee has requested to cancel his progress</div>
-                                <a href="{{route('task.cancellationreject')}}" onClick="confirm('Reject assignee request to cancel?')"><button type="button" class="btn btn-danger">Reject</button></a>
-                                <a href="{{route('task.cancellationapprove')}}" onClick="confirm('Approve assignee request to cancel?')"><button type="button" class="btn btn-success">Approve</button>
+                                <a href="{{route('task.cancellationreject',['task_id'=>$task->id ],false)}}" onClick="confirm('Reject assignee request to cancel?')"><button type="button" class="btn btn-danger">Reject</button></a>
+                                <a href="{{route('task.cancellationapprove',['task_id'=>$task->id ],false)}}" onClick="confirm('Approve assignee request to cancel?')"><button type="button" class="btn btn-success">Approve</button>
                                <!---- resquester action --->
                                   @elseif($task->status=="Pending Verification")
                                       <div class="mb-4 text-info">The assignee has marked this task as completed</div>
@@ -200,7 +200,7 @@
                             <a href="{{route('task.assigneeCancel',['task_id'=>$task->id ],false) }}" onClick="return confirm('Request to cancel this task?')"><button type="button" class="btn btn-danger">Request Cancellation</button></a>
                             <a href="{{route('task.assigneeComplete',['task_id'=>$task->id ],false) }}" onClick="return confirm('Mark this task as completed?')"><button type="button" class="btn btn-success" onclick="assigneeAction($task->id)">Task Completed</button></a>
                             <a href="{{route('task.assigneeExtend',['task_id'=>$task->id ],false) }}" onClick="confirm('Extend this task as a requester to another assignee?')"><button type="button" class="btn btn-primary">Extend</button></a>
-                            @elseif(($task->status=="Completed")&&($task->name==null))
+                            @elseif(($task->status=="Completed")&&($task->rating_user==null))
 
                             <div class="mb-4 text-info">Hooray Jobs completed and requester has rate you {{$task->rating_assign}}</div>
 
@@ -372,20 +372,35 @@
             <div class="col-lg-6">
                     <div class="card">
                         <div class="card-header">Task Log</div>
+                        <div class="container mt-2">
+                                <div class="table-responsive">
+                                    <table id="table" class="table table-bordered">
+                                        <thead>
+                                            <tr>
+                                                <th>Description</th>
+                                                <th>Time</th>
+                                            </tr>
+                                        </thead>
+                                        <tbody>
+                                            @foreach($task->log as $single)
+                                            <tr>
+                
+                                                <td>{{$single->description}}</td>
+                                                <td>{{$single->created_at}}</td>
+                                            </tr>
+                                            @endforeach
+                                        </tbody>
+                                    </table>
+                                </div>
+                            </div>
                         <div class="card-body">
-                    </div>
+                        </div>
                 </div>
+                </div>
+                
         </div>
             
 @endif
-
-
-<!-- Task Parent -->
-<!-- <div class="card">
-    <div class="card-header">Task Request</div>
-    <div class="card-body">
-    </div>
-</div> -->
 
 @endsection
 
