@@ -102,7 +102,7 @@ class UserController extends Controller
 
       $cc2 = new CartaGeraf;
       $cc2->labels(['Created', 'Accepted', 'Completed', 'Rejected', 'Cancelled']);
-      $cc2->dataset('Task Count', 'bar', [
+      $cc2->dataset('Success Rating', 'bar', [
         $cuser->task_create,
         $cuser->task_accept,
         $cuser->task_complete,
@@ -117,16 +117,43 @@ class UserController extends Controller
           'hover' => ['mode' => 'nearest', 'intersect' => true],
         ]);
 
-      // dd($cc2);
-
-
       $this->addVar('chart3', $cc2);
 
+      $cc2 = new CartaGeraf;
+      $cc2->labels(['S', 'U', 'C', 'C', 'E', 'S', 'S']);
+      $cc2->dataset('Task Count', 'bar', [
+        \DB::table('tasks')->where('assign_id', $cuser->id)->where('status', 'Complete')
+          ->where('success_rating_assign', 1)->avg('rating_assign'),
+        \DB::table('tasks')->where('assign_id', $cuser->id)->where('status', 'Complete')
+          ->where('success_rating_assign', 2)->avg('rating_assign'),
+        \DB::table('tasks')->where('assign_id', $cuser->id)->where('status', 'Complete')
+          ->where('success_rating_assign', 3)->avg('rating_assign'),
+        \DB::table('tasks')->where('assign_id', $cuser->id)->where('status', 'Complete')
+          ->where('success_rating_assign', 4)->avg('rating_assign'),
+        \DB::table('tasks')->where('assign_id', $cuser->id)->where('status', 'Complete')
+          ->where('success_rating_assign', 5)->avg('rating_assign'),
+        \DB::table('tasks')->where('assign_id', $cuser->id)->where('status', 'Complete')
+          ->where('success_rating_assign', 6)->avg('rating_assign'),
+        \DB::table('tasks')->where('assign_id', $cuser->id)->where('status', 'Complete')
+          ->where('success_rating_assign', 7)->avg('rating_assign')
+      ])
+        ->color($this->borderColors)
+        ->backgroundcolor($this->fillColors);
+      $cc2->options([
+          'responsive' => true,
+          'tooltips' => ['mode' => 'point', 'intersect' => true],
+          'hover' => ['mode' => 'nearest', 'intersect' => true],
+        ]);
+
+      $this->addVar('chart4', $cc2);
 
     }
 
+    $taskcount = Task::where('assign_id', $staffno)
+      ->where('status', 'Complete')
+      ->count();
 
-
+    $this->addVar('task_count', $taskcount);
     $this->addVar('info', $this->getEraProfile($staffno));
 
     // dd($this->data);

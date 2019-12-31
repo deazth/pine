@@ -54,6 +54,21 @@
         </div>
       </div>
       @endif
+      @if(isset($chart4))
+      <div class="card">
+        <div class="card-header">Stat on SUCCESS</div>
+        <div class="card-body">
+          {!! $chart4->container() !!}
+        </div>
+      </div>
+      @endif
+      <a href="{{route('profile.cal', ['staff_no' => $staff_no])}}">
+      <div class="card text-white bg-success">
+        <div class="card-header">All My Completed Tasks</div>
+        <div class="card-body">
+          <p>Task count: {{ $task_count }}. Click Me</p>
+        </div>
+      </div></a>
     </div>
   </div>
 </div>
@@ -74,5 +89,8 @@
 @endif
 @if(isset($chart3))
   {!! $chart3->script() !!}
+@endif
+@if(isset($chart4))
+  {!! $chart4->script() !!}
 @endif
 @stop

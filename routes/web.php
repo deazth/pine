@@ -53,7 +53,7 @@ Route::group(['middleware' => ['admin']], function () {
      Route::post( '/task/assigneeRate','TaskController@assigneeRate')->name('task.assigneeRate');
 
 
-
+  Route::get( '/profile/cal','UserController@taskHistoryCal')->name('profile.cal');
   Route::get( '/user/skill/','UserSkillController@index')->name('userskill.index');
   Route::get( '/user/skill/create','UserSkillController@create')->name('userskill.create');
   Route::post( '/user/skill/store','UserSkillController@store')->name('userskill.store');
