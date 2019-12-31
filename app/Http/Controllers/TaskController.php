@@ -193,9 +193,16 @@ class TaskController extends Controller
 public function assigneeComplete(Request $req)
 {
     $task = Task::find($req->task_id);
+    $task->status = 'Pending Verification';
+    $task->save();
 
 
-    dd($req->task_id);
+
+    return redirect(route('task.showpending',[],false))->with([
+        'feedback' => true,
+        'feedback_text' => "Successfully submit the task for verification!",
+        'feedback_type' => "success"
+    ]);
   }
 
 
