@@ -18,6 +18,7 @@ class CreateTaskInteractionsTable extends Migration
             $table->integer('user_id');
             $table->integer('task_id');
             $table->string('message');
+            $table->string('read');
             $table->timestamps();
         });
     }

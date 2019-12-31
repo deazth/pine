@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Task;
+use App\TaskInteraction;
 use App\Models\Skill;
 use App\Models\SkillCat;
 use App\User;
@@ -158,6 +159,20 @@ class TaskController extends Controller
         return $arr;
     }
 
+    public function submitMessage(Request $req)
+    {
+        $task = new TaskInteraction;
+        $task->user_id = backpack_user()->id;
+        $task->task_id = $req->inputid;
+        $task->message = $req->inputmessage;
+        $task->save();
+        $task = Task::find($req->inputid);
+        $task = array($task->id, $task->skill_cat_id);
+        Session::put(['task' => $task, 'draft' => []]);
+        return redirect()->back();
+        // return redirect(route('task.showrequest',[], false));
+    }
+
     public function proposeReject(Request $req)
     {
         $task = Task::find($req->task_id);
@@ -166,7 +181,7 @@ class TaskController extends Controller
         $task->save();
         return redirect(route('task.showpending',[],false))->with([
             'feedback' => true,
-            'feedback_text' => "Successfully rejected new task request!",
+            'feedback_text' => "Successfully declined new task request!",
             'feedback_type' => "warning"
         ]);
     }

@@ -28,6 +28,8 @@ Route::group(['middleware' => ['admin']], function () {
   Route::post( '/task/request/new','TaskController@showTaskRequestNew')->name('task.newrequest');
   Route::post( '/task/request/submit','TaskController@submitTaskRequest')->name('task.submitrequest');
   Route::post( '/task/request/view','TaskController@viewTaskRequest')->name('task.viewrequest');
+  Route::post( '/task/request/msg','TaskController@submitMessage')->name('task.submitmsg');
+  // Route::get( '/task/request/msg','TaskController@submitMessage')->name('task.submitmsg');
   Route::get( '/task/request/view','TaskController@viewTaskRequest')->name('task.viewrequest');
   Route::get( '/task/request/view/propose/reject','TaskController@proposeReject')->name('task.proposedreject');
   Route::get( '/task/request/view/propose/accept','TaskController@proposeAccept')->name('task.proposedaccept');

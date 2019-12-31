@@ -175,7 +175,7 @@
                             @endif
                         @elseif($task->assign_id==$user)
                             @if($task->status=="Proposed")
-                            <a href="{{route('task.proposedreject',['task_id'=>$task->id ],false)}}" onClick="return confirm('Reject this task?')"><button type="button" class="btn btn-danger">Reject</button></a>
+                            <a href="{{route('task.proposedreject',['task_id'=>$task->id ],false)}}" onClick="return confirm('Reject this task?')"><button type="button" class="btn btn-danger">Decline</button></a>
                             <a href="{{route('task.proposedaccept',['task_id'=>$task->id ],false)}}" onClick="return confirm('Accept this task?')"><button type="button" class="btn btn-success">Accept</button></a>
                             <button id="assign" type="button" class="btn btn-primary"
                                 data-toggle="modal" data-target="#ass">Propose to other Assignee</button>
@@ -286,33 +286,64 @@
         </div>
     </div>
     @endif
-    <div class="container">
         <div class="row">
-            @if(count($task->interaction)!=0)
             <div class="col-lg-6">
                 <div class="card">
                     <div class="card-header">Task Interaction</div>
                     <div class="card-body">
-                        @foreach($task->interction as $single)
-                            <div class="card">
-                                <div class="card-body">
-                                    @if($single->user_id==$task->user_id)
-                                        <div class="w-100" style="text-align: left">{{$single->user->name}}</div>
-                                    @else
-                                        <div class="w-100" style="text-align: right">{{$single->user->name}}</div>
+                        @if(count($task->interaction)!=0)
+                            @php($previous="")
+                            @foreach($task->interaction as $single)
+                                
+                            <div class="w-100 small" style="text-align: center">{{$single->created_at}}</div>
+                                <div class="card">
+                                    @if($single->user_id!=$previous)
+                                        
+                                        @if($single->user_id==$task->user_id)
+                                            <div class="card-header">
+                                                <div class="w-100" style="text-align: left">{{$single->user->name}}</div>
+                                            </div>
+                                        @else
+                                            <div class="card-header">
+                                            <div class="w-100" style="text-align: right">{{$single->user->name}}</div>
+        
+                                            </div>
+                                        @endif
+                                    
+                                       
+                                       
                                     @endif
-                                    <div class="w-100" style="text-align: center">{{$single->created_at}}</div>
-                                    {{$single->message}}
+                                    
+                                    <div class="card-body">
+                                     {{$single->message}}
+                                        </div>
                                 </div>
-                            </div>
-                        @endforeach
-                        
+                                @php($previous = $single->user_id)
+                            @endforeach
+                        @endif
+                        @if(($task->status!="Open")&&($task->status!="Advertised")&&($task->status!="Proposed"))
+                                <form action="{{route('task.submitmsg')}}" method="POST">
+                                    @csrf
+                                    <input class="form-control" type="text" hidden name="inputid" value="{{$task->id}}" required>
+                    
+                                    <textarea name="inputmessage" id="" class="form-control" rows="3"></textarea>
+                                    <div class="text-center mt-4">
+                                        <button type="submit" class="btn btn-primary">Send Message</button>
+                                    </div>
+                                </form>
+                        @endif
                     </div>
                 </div>
+                
             </div>
-            @endif
+            <div class="col-lg-6">
+                    <div class="card">
+                        <div class="card-header">Task Log</div>
+                        <div class="card-body">
+                    </div>
+                </div>
         </div>
-    </div>
+            
 @endif
 
 
