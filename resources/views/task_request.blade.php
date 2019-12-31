@@ -130,7 +130,7 @@
                                 <button type="submit" class="btn btn-primary">Advertise Task</button>
                                 <button id="assign" type="button" class="btn btn-success" data-toggle="modal" data-target="#ass">Propose Assignee</button>
                             @elseif($task->status=="Request to Cancel")
-                                <div>The assigne has requested to cancel his progress</div>
+                                <div>The assignee has requested to cancel his progress</div>
                                 <button type="button" class="btn btn-danger">Reject</button>
                                 <button type="button" class="btn btn-success">Approve</button>
                             @endif

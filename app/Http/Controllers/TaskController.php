@@ -90,8 +90,14 @@ class TaskController extends Controller
     public function showTaskList(Request $req)
     {
         $task = Task::where('user_id', backpack_user()->id)->orderBy('created_at')->get();
+        return view('task_list', ['task' => $task]);
+
+    }
+    
+    public function showTaskPending(Request $req)
+    {
         $assign = Task::where('assign_id', backpack_user()->id)->orderBy('created_at')->get();
-        return view('task_list', ['task' => $task, 'assign' => $assign]);
+        return view('task_pending', ['assign' => $assign]);
 
     }
 
