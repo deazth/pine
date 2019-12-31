@@ -62,11 +62,11 @@ class UserController extends Controller
 
       if($cuser->total_req_count > 0){
         $avrate = $cuser->total_req_rating / $cuser->total_req_count;
-        $r5 = Task::where('user_id', $cuser->id)->where('status', 'Complete')->where('rating_user', 5)->count();
-        $r4 = Task::where('user_id', $cuser->id)->where('status', 'Complete')->where('rating_user', 4)->count();
-        $r3 = Task::where('user_id', $cuser->id)->where('status', 'Complete')->where('rating_user', 3)->count();
-        $r2 = Task::where('user_id', $cuser->id)->where('status', 'Complete')->where('rating_user', 2)->count();
-        $r1 = Task::where('user_id', $cuser->id)->where('status', 'Complete')->where('rating_user', 1)->count();
+        $r5 = Task::where('user_id', $cuser->id)->where('status', 'Completed')->where('rating_user', 5)->count();
+        $r4 = Task::where('user_id', $cuser->id)->where('status', 'Completed')->where('rating_user', 4)->count();
+        $r3 = Task::where('user_id', $cuser->id)->where('status', 'Completed')->where('rating_user', 3)->count();
+        $r2 = Task::where('user_id', $cuser->id)->where('status', 'Completed')->where('rating_user', 2)->count();
+        $r1 = Task::where('user_id', $cuser->id)->where('status', 'Completed')->where('rating_user', 1)->count();
 
         $usersChart = new CartaGeraf;
         $usersChart->labels(['5', '4', '3', '2', '1']);
@@ -84,11 +84,11 @@ class UserController extends Controller
 
       if($cuser->total_do_count > 0){
         $avrate = $cuser->total_do_rating / $cuser->total_do_count;
-        $r5 = Task::where('assign_id', $cuser->id)->where('status', 'Complete')->where('rating_assign', 5)->count();
-        $r4 = Task::where('assign_id', $cuser->id)->where('status', 'Complete')->where('rating_assign', 4)->count();
-        $r3 = Task::where('assign_id', $cuser->id)->where('status', 'Complete')->where('rating_assign', 3)->count();
-        $r2 = Task::where('assign_id', $cuser->id)->where('status', 'Complete')->where('rating_assign', 2)->count();
-        $r1 = Task::where('assign_id', $cuser->id)->where('status', 'Complete')->where('rating_assign', 1)->count();
+        $r5 = Task::where('assign_id', $cuser->id)->where('status', 'Completed')->where('rating_assign', 5)->count();
+        $r4 = Task::where('assign_id', $cuser->id)->where('status', 'Completed')->where('rating_assign', 4)->count();
+        $r3 = Task::where('assign_id', $cuser->id)->where('status', 'Completed')->where('rating_assign', 3)->count();
+        $r2 = Task::where('assign_id', $cuser->id)->where('status', 'Completed')->where('rating_assign', 2)->count();
+        $r1 = Task::where('assign_id', $cuser->id)->where('status', 'Completed')->where('rating_assign', 1)->count();
 
         $usersChart = new CartaGeraf;
         $usersChart->labels(['5', '4', '3', '2', '1']);
@@ -102,7 +102,7 @@ class UserController extends Controller
 
       $cc2 = new CartaGeraf;
       $cc2->labels(['Created', 'Accepted', 'Completed', 'Rejected', 'Cancelled']);
-      $cc2->dataset('Success Rating', 'bar', [
+      $cc2->dataset('Tasks Summary', 'bar', [
         $cuser->task_create,
         $cuser->task_accept,
         $cuser->task_complete,
@@ -119,23 +119,25 @@ class UserController extends Controller
 
       $this->addVar('chart3', $cc2);
 
+
+
       $cc2 = new CartaGeraf;
       $cc2->labels(['S', 'U', 'C', 'C', 'E', 'S', 'S']);
-      $cc2->dataset('Task Count', 'bar', [
-        \DB::table('tasks')->where('assign_id', $cuser->id)->where('status', 'Complete')
-          ->where('success_rating_assign', 1)->avg('rating_assign'),
-        \DB::table('tasks')->where('assign_id', $cuser->id)->where('status', 'Complete')
-          ->where('success_rating_assign', 2)->avg('rating_assign'),
-        \DB::table('tasks')->where('assign_id', $cuser->id)->where('status', 'Complete')
-          ->where('success_rating_assign', 3)->avg('rating_assign'),
-        \DB::table('tasks')->where('assign_id', $cuser->id)->where('status', 'Complete')
-          ->where('success_rating_assign', 4)->avg('rating_assign'),
-        \DB::table('tasks')->where('assign_id', $cuser->id)->where('status', 'Complete')
-          ->where('success_rating_assign', 5)->avg('rating_assign'),
-        \DB::table('tasks')->where('assign_id', $cuser->id)->where('status', 'Complete')
-          ->where('success_rating_assign', 6)->avg('rating_assign'),
-        \DB::table('tasks')->where('assign_id', $cuser->id)->where('status', 'Complete')
-          ->where('success_rating_assign', 7)->avg('rating_assign')
+      $cc2->dataset('Average SUCCESS Rating', 'bar', [
+        \DB::table('tasks')->where('assign_id', $cuser->id)->where('status', 'Completed')
+          ->where('success_rating_assign', '1')->avg('rating_assign'),
+        \DB::table('tasks')->where('assign_id', $cuser->id)->where('status', 'Completed')
+          ->where('success_rating_assign', '2')->avg('rating_assign'),
+        \DB::table('tasks')->where('assign_id', $cuser->id)->where('status', 'Completed')
+          ->where('success_rating_assign', '3')->avg('rating_assign'),
+        \DB::table('tasks')->where('assign_id', $cuser->id)->where('status', 'Completed')
+          ->where('success_rating_assign', '4')->avg('rating_assign'),
+        \DB::table('tasks')->where('assign_id', $cuser->id)->where('status', 'Completed')
+          ->where('success_rating_assign', '5')->avg('rating_assign'),
+        \DB::table('tasks')->where('assign_id', $cuser->id)->where('status', 'Completed')
+          ->where('success_rating_assign', '6')->avg('rating_assign'),
+        \DB::table('tasks')->where('assign_id', $cuser->id)->where('status', 'Completed')
+          ->where('success_rating_assign', '7')->avg('rating_assign')
       ])
         ->color($this->borderColors)
         ->backgroundcolor($this->fillColors);
@@ -149,8 +151,8 @@ class UserController extends Controller
 
     }
 
-    $taskcount = Task::where('assign_id', $staffno)
-      ->where('status', 'Complete')
+    $taskcount = Task::where('assign_id', $cuser->id)
+      ->where('status', 'Completed')
       ->count();
 
     $this->addVar('task_count', $taskcount);
@@ -224,22 +226,26 @@ class UserController extends Controller
     $st = User::where('staff_no', $staffno)->first();
     if($st){
       $tasklist = Task::where('assign_id', $st->id)
-        ->where('status', 'Complete')->whereNotNull('rating_user')->get();
+        ->where('status', 'Completed')->whereNotNull('rating_user')->get();
+
+      // dd($tasklist);
 
       foreach ($tasklist as $value) {
-        Calendar::event(
+        $evlist[] = Calendar::event(
             $value->name . '('.$value->rating_assign.')',
             false,
             new \DateTime($value->accepted_date),
             new \DateTime($value->submit_date),
             $value->id,[
               'url' => route('task.viewrequest', ['inputid' => $value->id]),
-              'color' => $this->$borderColors[$counter%0]
+              'color' => $this->borderColors[$counter%10]
             ]
           );
         $counter++;
       }
     }
+
+    // dd($evlist);
 
     $cds = Calendar::addEvents($evlist);
     $this->addVar('cds', $cds);

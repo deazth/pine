@@ -124,7 +124,7 @@ class TaskController extends Controller
         if ($req->session()->get('task')!=null) {
             $taskm = TaskInteraction::where('user_id','!=',backpack_user()->id)->where('id', $req->session()->get('task')[0])->get();
             foreach($taskm as $s){
-                $s->read = X;
+                $s->read = 'X';
                 $s->save();
             }
             $task = Task::where('id', $req->session()->get('task')[0])->first();

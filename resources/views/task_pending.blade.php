@@ -47,6 +47,14 @@
 </div>
 @endsection
 
+@section('after_styles')
+  <!-- DATA TABLES -->
+  <link rel="stylesheet" type="text/css" href="{{ asset('packages/datatables.net-bs4/css/dataTables.bootstrap4.min.css') }}">
+  <link rel="stylesheet" type="text/css" href="{{ asset('packages/datatables.net-fixedheader-bs4/css/fixedHeader.bootstrap4.min.css') }}">
+  <link rel="stylesheet" type="text/css" href="{{ asset('packages/datatables.net-responsive-bs4/css/responsive.bootstrap4.min.css') }}">
+
+@endsection
+
 @section('after_scripts')
 
 
@@ -64,9 +72,9 @@
     $(document).ready(function() {
         $('#table').DataTable({
             "responsive": "true",
-            // "order" : [[1, "asc"]],
-            "searching": false,
-            "bSort": false
+            // // "order" : [[1, "asc"]],
+            // "searching": false,
+            // "bSort": false
         });
     });
 </script>
