@@ -229,6 +229,40 @@
     </div>
 </div>
 
+
+@if($draft ?? '')
+    @if($draft[4]!="")
+    <div class="card">
+        <div class="card-header">Original Task</div>
+        <div class="card-body">
+            <div class="container">
+                <div class="table-responsive">
+                    <table id="table" class="table table-bordered">
+                        <thead>
+                            <tr>
+                                <th>Reference No</th>
+                                <th>Task title</th>
+                                <th>Date Created</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr>
+                                <td><a href="{{route('task.viewrequest',['inputid'=>$draft[4] ],false) }}" onClick="return confirm('View parent task?')">{{$draft[5]}}
+                                </a></td>
+                                <td>{{$draft[6]}}</td>
+                                <td>{{$draft[7]}}</td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+    </div>
+    @endif
+@endif
+
+@if($task ?? '')
+
 @if($task->status == 'Advertised' && count($task->applicant)!=0)
 <div class="card">
     <div class="card-header">Applicant</div>
@@ -264,39 +298,6 @@
     </div>
 </div>
 @endif
-
-@if($draft ?? '')
-    @if($draft[4]!="")
-    <div class="card">
-        <div class="card-header">Original Task</div>
-        <div class="card-body">
-            <div class="container">
-                <div class="table-responsive">
-                    <table id="table" class="table table-bordered">
-                        <thead>
-                            <tr>
-                                <th>Reference No</th>
-                                <th>Task title</th>
-                                <th>Date Created</th>
-                            </tr>
-                        </thead>
-                        <tbody>
-                            <tr>
-                                <td><a href="{{route('task.viewrequest',['inputid'=>$draft[4] ],false) }}" onClick="return confirm('View parent task?')">{{$draft[5]}}
-                                </a></td>
-                                <td>{{$draft[6]}}</td>
-                                <td>{{$draft[7]}}</td>
-                            </tr>
-                        </tbody>
-                    </table>
-                </div>
-            </div>
-        </div>
-    </div>
-    @endif
-@endif
-
-@if($task ?? '')
     @if($task->parent_id!="")
     <div class="card">
         <div class="card-header">Original Task</div>
@@ -657,14 +658,14 @@ Please rate: 1 <input type="radio" value="1" selected name="rating_user"/>
 
       });
 
-      $(document).ready(function() {
-          $('#table').DataTable({
-              "responsive": "true",
-              // "order" : [[1, "asc"]],
-              "searching": false,
-              "bSort": false
-          });
-      });
+    //   $(document).ready(function() {
+    //       $('#table').DataTable({
+    //           "responsive": "true",
+    //           // "order" : [[1, "asc"]],
+    //           "searching": false,
+    //           "bSort": false
+    //       });
+    //   });
 
 </script>
 @stop
