@@ -40,8 +40,12 @@ Route::group(['middleware' => ['admin']], function () {
   Route::get( '/task/open','TaskController@showTaskOpen')->name('task.showopen'); //Advertisement
   Route::get( '/task/assigneeComplete','TaskController@assigneeComplete')->name('task.assigneeComplete');
   Route::post( '/task/apply','TaskController@applyForAds')->name('task.apply'); //Advertisement
+
+
+
     Route::get( '/task/assigneeCancel','TaskController@assigneeCancel')->name('task.assigneeCancel');
     Route::get( '/task/assigneeExtend','TaskController@assigneeExtend')->name('task.assigneeExtend');
+      Route::get( '/task/requesterReject','TaskController@requesterReject')->name('task.requesterReject');
 
   Route::get( '/user/skill/','UserSkillController@index')->name('userskill.index');
   Route::get( '/user/skill/create','UserSkillController@create')->name('userskill.create');
