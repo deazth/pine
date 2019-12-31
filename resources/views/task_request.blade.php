@@ -15,6 +15,7 @@
             @csrf
                 @if($task ?? '')   
                     <input class="form-control" type="text" hidden name="inputid" value="{{$task->id}}" required>
+                    <input class="form-control" type="text" hidden name="inputref" value="{{$task->reference_no}}" required>
                 @endif
                 <input class="form-control d-none" type="text" hidden id="inputassignid" name="inputassignid">
                 <div class="row">
@@ -27,6 +28,13 @@
                                         {{$task->reference_no}} 
                                     @elseif($draft ?? '') 
                                         {{$draft[0]}} 
+                                    @endif
+                                </div>
+                                <div class="mt-2 col-lg-12"></div>
+                                <div class="col-lg-2">Created Date:</div>
+                                <div class="col-lg-10">
+                                    @if($task ?? '') 
+                                        {{$task->created_at}} 
                                     @endif
                                 </div>
                                 <div class="mt-2 col-lg-12"></div>
@@ -48,7 +56,7 @@
                                     @endif
                                 </div>
                                     @if($task ?? '') 
-                                        @if(($task->status!="Open")||($task->status!="Advertised"))
+                                        @if(($task->status!="Open")&&($task->status!="Advertised"))
                                         <div class="mt-2 col-lg-12"></div>
                                         <div class="col-lg-2">Assigned to:</div>
                                         <div class="col-lg-10">
@@ -62,7 +70,7 @@
                                 <div class="col-lg-10">
                                     <input class="form-control" type="text" id="inputname" name="inputname" placeholder="Insert Title"
                                     @if($task ?? '') 
-                                        value="{{$task->name}}" disabled
+                                        value="{{$task->name}}" readonly
                                     @endif
                                     required>
                                 </div>
@@ -72,12 +80,17 @@
                                     <textarea class="form-control" type="text" id="inputdescription" name="inputdescription" @if($task ?? '') @if($task->status!="Open") disabled @endif @endif rows="5" required placeholder="Insert Description">@if($task ?? ''){{$task->descr}}@endif</textarea>
                                 </div>
                                 <div class="mt-2 col-lg-12"></div>
-                                <div class="col-lg-2">Skill Category:</div>
+                                <div class="col-lg-2">Skill Category:</div> 
+                                @if($task ?? '') 
+                                        @if($task->status!="Open")
+                                        <input class="form-control" type="text" hidden name="inputskillcat" value="{{$task->skill_cat_id}}" required>
+                                        @endif
+                                    @endif
                                 <div class="col-lg-6">
                                     <select class="form-control" id="inputskillcat" name="inputskillcat"
                                     @if($task ?? '') 
                                         @if($task->status!="Open")
-                                            disabled
+                                            readonly
                                         @endif
                                     @endif    
                                     required>
@@ -98,6 +111,11 @@
                                 <div class="col-lg-4"></div>
                                 <div class="mt-2 col-lg-12"></div>
                                 <div class="col-lg-2">Skill:</div>
+                                    @if($task ?? '') 
+                                        @if($task->status!="Open")
+                                        <input class="form-control" type="text" hidden name="inputskill" value="{{$task->skill_id}}" required>
+                                        @endif
+                                    @endif
                                 <div class="col-lg-6">
                                     <select class="form-control" id="inputskill" name="inputskill"
                                     @if($task ?? '') 
@@ -126,9 +144,15 @@
                 <div class="text-center">
                     @if($task ?? '')
                         @if($task->user_id==$user)
-                            @if($task->status=="Open")
+                            @if(($task->status=="Open")||($task->status=="Proposed")||($task->status=="Advertised"))
                                 <button type="submit" class="btn btn-primary">Advertise Task</button>
-                                <button id="assign" type="button" class="btn btn-success" data-toggle="modal" data-target="#ass">Propose Assignee</button>
+                                @if(($task->status=="Open")||($task->status=="Advertised"))
+                                <button id="assign" type="button" class="btn btn-success" 
+                                data-toggle="modal" data-target="#ass">Propose Assignee</button>
+                                @elseif($task->status=="Proposed")
+                                <button id="assign" type="button" class="btn btn-success" 
+                                data-toggle="modal" data-target="#ass">Propose to other Assignee</button>
+                                @endif
                             @elseif($task->status=="Request to Cancel")
                                 <div>The assignee has requested to cancel his progress</div>
                                 <button type="button" class="btn btn-danger">Reject</button>
@@ -141,6 +165,7 @@
                             @elseif($task->status=="In Progress")
                                 <button type="button" class="btn btn-danger">Request Cancellation</button>
                                 <button type="button" class="btn btn-success">Task Completed</button>
+                                <button type="button" class="btn btn-warning">Task Extend</button>
                             @endif
                         @endif
                     @endif
