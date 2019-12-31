@@ -45,7 +45,11 @@ Route::group(['middleware' => ['admin']], function () {
 
     Route::get( '/task/assigneeCancel','TaskController@assigneeCancel')->name('task.assigneeCancel');
     Route::get( '/task/assigneeExtend','TaskController@assigneeExtend')->name('task.assigneeExtend');
-      Route::get( '/task/requesterReject','TaskController@requesterReject')->name('task.requesterReject');
+    Route::get( '/task/requesterReject','TaskController@requesterReject')->name('task.requesterReject');
+         Route::post( '/task/requesterRate','TaskController@requesterRate')->name('task.requesterRate');
+     Route::post( '/task/assigneeRate','TaskController@assigneeRate')->name('task.assigneeRate');
+
+
 
   Route::get( '/user/skill/','UserSkillController@index')->name('userskill.index');
   Route::get( '/user/skill/create','UserSkillController@create')->name('userskill.create');
